@@ -1,0 +1,26 @@
+{
+  "name": "fairhour",
+  "private": true,
+  "version": "1.0.0",
+  "description": "FairHour - A modern Time Banking Platform where users exchange skills and services using time credits instead of money.",
+  "scripts": {
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install",
+    "install:all": "npm run install:client && npm run install:server",
+    "prisma:generate": "cd server && npm run prisma:generate",
+    "prisma:migrate": "cd server && npm run prisma:migrate",
+    "prisma:studio": "cd server && npm run prisma:studio"
+  },
+  "keywords": [
+    "time-banking",
+    "skills-exchange",
+    "community",
+    "services"
+  ],
+  "author": "",
+  "license": "MIT"
+}
