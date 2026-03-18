@@ -10,7 +10,10 @@ import {
   Check,
   AlertCircle,
   Camera,
+  Wallet,
+  ExternalLink,
 } from 'lucide-react';
+import { ethers } from 'ethers';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
 import { getTimeBalance } from '../api/auth';
@@ -424,14 +427,45 @@ const Profile: React.FC = () => {
                       (e.target as HTMLImageElement).src = DEFAULT_AVATARS[0];
                     }}
                   />
-                  <div className="ml-6 mb-2 hidden md:block">
-                    <h1 className="text-3xl font-extrabold text-gray-900">{user.name}</h1>
-                    <div className="flex items-center text-gray-500 mt-1">
-                      <MapPin className="h-4 w-4 mr-1" /> {user.location || 'Location not set'}
+                    <div className="ml-6 mb-2 hidden md:block">
+                      <h1 className="text-3xl font-extrabold text-gray-900">{user.name}</h1>
+                      <div className="flex items-center text-gray-500 mt-1">
+                        <MapPin className="h-4 w-4 mr-1" /> {user.location || 'Location not set'}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex space-x-3 mt-4 md:mt-0">
+                  <div className="flex flex-col md:flex-row gap-3 mt-4 md:mt-0">
+                  {!user.walletAddress ? (
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="rounded-xl shadow-md bg-brand-500 hover:bg-brand-600 border-none"
+                      onClick={async () => {
+                        if (!(window as any).ethereum) {
+                          alert('Please install MetaMask to connect your wallet.');
+                          return;
+                        }
+                        try {
+                          const provider = new ethers.BrowserProvider((window as any).ethereum);
+                          const accounts = await provider.send('eth_requestAccounts', []);
+                          if (accounts.length > 0) {
+                            await updateProfile({ walletAddress: accounts[0] });
+                          }
+                        } catch (err) {
+                          console.error('Failed to connect wallet:', err);
+                        }
+                      }}
+                    >
+                      <Wallet className="h-4 w-4 mr-2" /> Connect Wallet
+                    </Button>
+                  ) : (
+                    <div className="flex items-center bg-brand-50 text-brand-700 px-4 py-2 rounded-xl border border-brand-100 text-sm">
+                      <Wallet className="h-4 w-4 mr-2" />
+                      <span className="font-mono">
+                        {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
+                      </span>
+                    </div>
+                  )}
                   <Button
                     variant="outline"
                     size="sm"

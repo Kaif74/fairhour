@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Plus,
   Edit2,
@@ -11,6 +12,10 @@ import {
   X,
   Loader2,
   AlertCircle,
+  Trash2,
+  Search,
+  ChevronDown,
+  Shield,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../components/Button';
@@ -18,7 +23,7 @@ import Input from '../components/Input';
 import PageTransition from '../components/PageTransition';
 import { api } from '../api';
 import { CATEGORIES } from '../constants';
-import { ApiService } from '../types';
+import { ApiService, ApiOccupation } from '../types';
 
 // Use ApiService type from centralized types
 type Service = ApiService;
@@ -33,14 +38,112 @@ const AddServiceModal: React.FC<{
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [customCategory, setCustomCategory] = useState('');
+  const [occupationId, setOccupationId] = useState('');
+  const [selectedOccupation, setSelectedOccupation] = useState<ApiOccupation | null>(null);
+  const [occupationSearch, setOccupationSearch] = useState('');
+  const [occupationResults, setOccupationResults] = useState<ApiOccupation[]>([]);
+  const [isOccupationDropdownOpen, setIsOccupationDropdownOpen] = useState(false);
+  const [isSearchingOccupations, setIsSearchingOccupations] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const occupationDropdownRef = useRef<HTMLDivElement>(null);
+  const occupationInputRef = useRef<HTMLInputElement>(null);
+
+  // Debounced occupation search
+  const searchOccupations = useCallback(async (query: string) => {
+    if (query.length < 2) {
+      setOccupationResults([]);
+      return;
+    }
+    setIsSearchingOccupations(true);
+    try {
+      const response = await api.get<{ occupations: ApiOccupation[] }>(
+        `/api/occupations?search=${encodeURIComponent(query)}`,
+        { auth: false }
+      );
+      if (response.success && response.data?.occupations) {
+        setOccupationResults(response.data.occupations);
+      }
+    } catch {
+      // Non-critical
+    } finally {
+      setIsSearchingOccupations(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (occupationSearch.trim()) {
+        searchOccupations(occupationSearch.trim());
+      } else {
+        setOccupationResults([]);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [occupationSearch, searchOccupations]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (occupationDropdownRef.current && !occupationDropdownRef.current.contains(e.target as Node)) {
+        setIsOccupationDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Group occupations by majorGroup
+  const groupedResults = occupationResults.reduce<Record<string, ApiOccupation[]>>((acc, occ) => {
+    if (!acc[occ.majorGroup]) acc[occ.majorGroup] = [];
+    acc[occ.majorGroup].push(occ);
+    return acc;
+  }, {});
+
+  const skillLevelLabel = (level: number) => {
+    switch (level) {
+      case 1: return 'Elementary';
+      case 2: return 'Skilled';
+      case 3: return 'Technical';
+      case 4: return 'Professional';
+      default: return 'Unknown';
+    }
+  };
+
+  const skillLevelColor = (level: number) => {
+    switch (level) {
+      case 1: return 'bg-gray-100 text-gray-700';
+      case 2: return 'bg-blue-100 text-blue-700';
+      case 3: return 'bg-purple-100 text-purple-700';
+      case 4: return 'bg-amber-100 text-amber-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  const handleSelectOccupation = (occ: ApiOccupation) => {
+    setOccupationId(occ.id);
+    setSelectedOccupation(occ);
+    setOccupationSearch('');
+    setOccupationResults([]);
+    setIsOccupationDropdownOpen(false);
+  };
+
+  const handleClearOccupation = () => {
+    setOccupationId('');
+    setSelectedOccupation(null);
+    setOccupationSearch('');
+    setOccupationResults([]);
+  };
 
   const resetForm = () => {
     setTitle('');
     setDescription('');
     setCategory('');
     setCustomCategory('');
+    setOccupationId('');
+    setSelectedOccupation(null);
+    setOccupationSearch('');
+    setOccupationResults([]);
     setError(null);
   };
 
@@ -80,12 +183,12 @@ const AddServiceModal: React.FC<{
     setIsLoading(true);
 
     try {
-      // Use custom category if "Other" is selected
       const categoryToSubmit = category === 'Other' ? customCategory.trim() : category;
       const response = await api.post<Service>('/api/services', {
         title: title.trim(),
         description: description.trim(),
         category: categoryToSubmit,
+        occupationId: occupationId || null,
       });
 
       if (response.success && response.data) {
@@ -197,18 +300,164 @@ const AddServiceModal: React.FC<{
               )}
             </div>
 
-            <div className="bg-gray-50 rounded-xl p-4">
+            {/* Occupation / Skill Classification — Searchable Picker */}
+            <div ref={occupationDropdownRef}>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Skill Classification (NCO)</label>
+              
+              {/* Selected Occupation Chip */}
+              {selectedOccupation ? (
+                <div className="flex items-center justify-between p-3 bg-brand-50 border border-brand-200 rounded-xl mb-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${skillLevelColor(selectedOccupation.skillLevel)}`}>
+                      {skillLevelLabel(selectedOccupation.skillLevel)}
+                    </span>
+                    <span className="text-sm font-medium text-gray-900 truncate">{selectedOccupation.title}</span>
+                    <span className="text-xs text-brand-600 font-bold whitespace-nowrap">×{selectedOccupation.baseMultiplier}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleClearOccupation}
+                    className="p-1 text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 ml-2"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                /* Search Input */
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    {isSearchingOccupations ? (
+                      <Loader2 className="w-4 h-4 text-gray-400 animate-spin" />
+                    ) : (
+                      <Search className="w-4 h-4 text-gray-400" />
+                    )}
+                  </div>
+                  <input
+                    ref={occupationInputRef}
+                    type="text"
+                    value={occupationSearch}
+                    onChange={(e) => {
+                      setOccupationSearch(e.target.value);
+                      setIsOccupationDropdownOpen(true);
+                    }}
+                    onFocus={() => setIsOccupationDropdownOpen(true)}
+                    placeholder="Search occupations... e.g. plumber, teacher, accountant"
+                    disabled={isLoading}
+                    className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all disabled:opacity-50 bg-white text-sm"
+                  />
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isOccupationDropdownOpen ? 'rotate-180' : ''}`} />
+                  </div>
+                </div>
+              )}
+
+              {/* Dropdown Results */}
+              <AnimatePresence>
+                {isOccupationDropdownOpen && !selectedOccupation && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.15 }}
+                    className="mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto z-20 relative"
+                  >
+                    {occupationSearch.length < 2 ? (
+                      <div className="px-4 py-6 text-center text-sm text-gray-400">
+                        <Search className="w-5 h-5 mx-auto mb-2 opacity-50" />
+                        Type at least 2 characters to search occupations
+                      </div>
+                    ) : isSearchingOccupations ? (
+                      <div className="px-4 py-6 text-center text-sm text-gray-400">
+                        <Loader2 className="w-5 h-5 mx-auto mb-2 animate-spin" />
+                        Searching...
+                      </div>
+                    ) : Object.keys(groupedResults).length === 0 ? (
+                      <div className="px-4 py-6 text-center text-sm text-gray-400">
+                        No occupations found for "{occupationSearch}"
+                      </div>
+                    ) : (
+                      Object.entries(groupedResults).map(([group, occs]) => (
+                        <div key={group}>
+                          <div className="px-3 py-1.5 bg-gray-50 text-[10px] font-bold text-gray-500 uppercase tracking-wider sticky top-0">
+                            {group}
+                          </div>
+                          {occs.map((occ) => (
+                            <button
+                              key={occ.id}
+                              type="button"
+                              onClick={() => handleSelectOccupation(occ)}
+                              className="w-full text-left px-3 py-2.5 hover:bg-brand-50 transition-colors flex items-center justify-between gap-2 group/item"
+                            >
+                              <div className="flex items-center gap-2 min-w-0">
+                                <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${skillLevelColor(occ.skillLevel)}`}>
+                                  L{occ.skillLevel}
+                                </span>
+                                <span className="text-sm text-gray-800 truncate group-hover/item:text-brand-700 transition-colors">
+                                  {occ.title}
+                                </span>
+                              </div>
+                              <span className="text-xs font-bold text-brand-600 whitespace-nowrap">×{occ.baseMultiplier}</span>
+                            </button>
+                          ))}
+                        </div>
+                      ))
+                    )}
+
+                    {/* None option always at bottom */}
+                    {occupationSearch.length >= 2 && (
+                      <div className="border-t border-gray-100">
+                        <button
+                          type="button"
+                          onClick={handleClearOccupation}
+                          className="w-full text-left px-3 py-2.5 hover:bg-gray-50 transition-colors text-sm text-gray-500 font-medium"
+                        >
+                          None — Default (1 cr/hr)
+                        </button>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <p className="text-xs text-gray-400 mt-1.5">
+                {selectedOccupation
+                  ? `[${selectedOccupation.ncoCode}] ${selectedOccupation.majorGroup}`
+                  : 'Search and select an occupation to set your skill-based credit multiplier'
+                }
+              </p>
+            </div>
+
+            {/* Credit Rate + Trust Info */}
+            <div className="bg-gray-50 rounded-xl p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-700">Hourly Value</p>
+                  <p className="text-sm font-medium text-gray-700">Credit Rate</p>
                   <p className="text-xs text-gray-500">
-                    All services are valued equally at 1 credit per hour
+                    {occupationId
+                      ? 'Rate determined by skill level, reputation, and demand'
+                      : 'Select a skill classification to earn more credits'
+                    }
                   </p>
                 </div>
                 <div className="flex items-center px-4 py-2 bg-brand-100 text-brand-700 rounded-lg font-bold">
-                  <Zap className="w-4 h-4 mr-1" />1 Credit/hr
+                  <Zap className="w-4 h-4 mr-1" />
+                  {occupationId && selectedOccupation
+                    ? `×${selectedOccupation.baseMultiplier}`
+                    : '1'
+                  } cr/hr
                 </div>
               </div>
+
+              {/* Trust dampening info */}
+              {occupationId && selectedOccupation && selectedOccupation.baseMultiplier > 1 && (
+                <div className="flex items-start gap-2 p-2.5 bg-amber-50 border border-amber-100 rounded-lg">
+                  <Shield className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                  <div className="text-xs text-amber-700">
+                    <p className="font-semibold mb-0.5">Trust-based rate unlock</p>
+                    <p className="text-amber-600">New providers start at a reduced rate that unlocks to ×{selectedOccupation.baseMultiplier} as you complete exchanges and build positive reviews.</p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Actions */}
@@ -243,6 +492,15 @@ const MyServices: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => setOpenDropdownId(null);
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   // Fetch services on mount
   useEffect(() => {
@@ -291,6 +549,22 @@ const MyServices: React.FC = () => {
       console.error('Failed to toggle service status:', err);
     } finally {
       setTogglingId(null);
+    }
+  };
+
+  const handleDeleteService = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this service? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await api.delete(`/api/services/${id}`);
+      if (response.success) {
+        setServices(services.filter((s) => s.id !== id));
+      }
+    } catch (err) {
+      console.error('Failed to delete service:', err);
+      alert('Failed to delete service.');
     }
   };
 
@@ -360,10 +634,56 @@ const MyServices: React.FC = () => {
                       />
                       {service.isActive ? 'Active' : 'Paused'}
                     </span>
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="text-gray-400 hover:text-gray-600">
-                        <MoreHorizontal className="w-5 h-5" />
-                      </button>
+                    <div className="relative">
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button 
+                          className="text-gray-400 hover:text-gray-600 p-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenDropdownId(openDropdownId === service.id ? null : service.id);
+                          }}
+                        >
+                          <MoreHorizontal className="w-5 h-5" />
+                        </button>
+                      </div>
+                      
+                      {openDropdownId === service.id && (
+                        <div className="absolute right-0 top-8 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-10"
+                             onClick={(e) => e.stopPropagation()}
+                        >
+                          <button
+                            onClick={() => {
+                              navigate(`/service/${service.id}?edit=true`);
+                              setOpenDropdownId(null);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center font-medium"
+                          >
+                            <Edit2 className="w-4 h-4 mr-2 text-gray-400" />
+                            Edit Service
+                          </button>
+                          <button
+                            onClick={() => {
+                              toggleStatus(service.id);
+                              setOpenDropdownId(null);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center font-medium"
+                          >
+                            {service.isActive ? <PauseCircle className="w-4 h-4 mr-2 text-gray-400" /> : <PlayCircle className="w-4 h-4 mr-2 text-brand-500" />}
+                            {service.isActive ? 'Pause Service' : 'Activate Service'}
+                          </button>
+                          <div className="mx-2 my-1 border-b border-gray-100"></div>
+                          <button
+                            onClick={() => {
+                              handleDeleteService(service.id);
+                              setOpenDropdownId(null);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center font-medium"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete Service
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -379,7 +699,16 @@ const MyServices: React.FC = () => {
                         Hourly Value
                       </p>
                       <p className="font-bold text-gray-900 flex items-center mt-1">
-                        <Zap className="w-3.5 h-3.5 mr-1 text-brand-500" /> 1 Credit
+                        <Zap className="w-3.5 h-3.5 mr-1 text-brand-500" />
+                        {(() => {
+                          const multiplier = (service as any).occupation?.baseMultiplier ?? 1;
+                          const min = multiplier;
+                          // If there's an occupation, max can be up to 1.3x. If not, it's just 1.
+                          const max = (service as any).occupationId 
+                            ? parseFloat(Math.min(2.5, multiplier * 1.3).toFixed(1))
+                            : multiplier;
+                          return min === max ? min : `${min}–${max}`;
+                        })()} cr/hr
                       </p>
                     </div>
                     <div>
@@ -396,10 +725,12 @@ const MyServices: React.FC = () => {
 
                 <div className="bg-gray-50 px-6 py-3 border-t border-gray-100 flex justify-between items-center">
                   <div className="flex items-center text-sm font-bold text-gray-700">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" /> 5.0
+                    <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
+                    {(service as any).user?.reputationScore > 0 ? (service as any).user.reputationScore.toFixed(1) : '4.5'}
                   </div>
                   <div className="flex space-x-2">
                     <button
+                      onClick={() => navigate(`/service/${service.id}?edit=true`)}
                       className="p-2 text-gray-500 hover:text-brand-600 hover:bg-white rounded-lg transition-colors"
                       title="Edit"
                     >

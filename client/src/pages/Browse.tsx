@@ -165,6 +165,20 @@ const Browse: React.FC = () => {
                         {service.title}
                       </h3>
                       <p className="text-gray-500 text-sm line-clamp-2">{service.description}</p>
+
+                      {/* Skill Level Badge */}
+                      {service.skillLevel && service.skillLevel !== 'Intermediate' && (
+                        <div className="mt-2">
+                          <span className={`inline-block px-2 py-0.5 rounded-md text-xs font-semibold ${
+                            service.skillLevel === 'Professional' ? 'bg-purple-100 text-purple-700' :
+                            service.skillLevel === 'Advanced' ? 'bg-blue-100 text-blue-700' :
+                            service.skillLevel === 'Basic' ? 'bg-gray-100 text-gray-600' :
+                            'bg-green-100 text-green-700'
+                          }`}>
+                            {service.skillLevel}
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     <div className="px-6 py-4 bg-gray-50/50 border-t border-gray-100 flex items-center justify-between">
@@ -174,7 +188,10 @@ const Browse: React.FC = () => {
                       </div>
                       <div className="flex items-center text-brand-700 font-bold text-sm">
                         <Clock className="h-4 w-4 mr-1.5" />
-                        {service.costPerHour} hr
+                        {service.creditRateMin && service.creditRateMax && service.creditRateMin !== service.creditRateMax
+                          ? `${service.creditRateMin}–${service.creditRateMax}`
+                          : service.costPerHour
+                        } cr/hr
                       </div>
                     </div>
                   </motion.div>

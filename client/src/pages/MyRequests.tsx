@@ -8,6 +8,7 @@ import {
     Loader2,
     AlertCircle,
     Plus,
+    ExternalLink,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
@@ -26,6 +27,7 @@ interface Exchange {
     completedAt: string | null;
     providerConfirmed?: boolean;
     requesterConfirmed?: boolean;
+    blockchainTxHash?: string | null;
     provider: { id: string; name: string; profileImageUrl?: string };
     requester: { id: string; name: string; profileImageUrl?: string };
     service?: { id: string; title: string; category: string };
@@ -243,6 +245,19 @@ const MyRequests: React.FC = () => {
                                                     <span className="font-semibold text-gray-900">{req.hours} Credits</span>
                                                 </div>
                                             </div>
+                                            {req.status === 'COMPLETED' && req.blockchainTxHash && (
+                                                <div className="mt-3 flex items-center gap-2">
+                                                    <a
+                                                        href={`https://sepolia.etherscan.io/tx/${req.blockchainTxHash}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-[10px] font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-lg border border-brand-100 flex items-center gap-1.5 hover:bg-brand-100 transition-colors"
+                                                    >
+                                                        Verified on Blockchain
+                                                        <ExternalLink className="w-3 h-3" />
+                                                    </a>
+                                                </div>
+                                            )}
                                         </div>
 
                                         {/* Timeline / Progress Preview */}

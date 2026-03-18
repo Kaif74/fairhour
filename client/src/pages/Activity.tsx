@@ -11,6 +11,7 @@ import {
   AlertCircle,
   Check,
   Loader2,
+  ExternalLink,
 } from 'lucide-react';
 import Button from '../components/Button';
 import PageTransition from '../components/PageTransition';
@@ -33,6 +34,7 @@ interface Exchange {
   status: 'PENDING' | 'ACTIVE' | 'COMPLETED';
   providerConfirmed: boolean;
   requesterConfirmed: boolean;
+  blockchainTxHash: string | null;
   createdAt: string;
   completedAt: string | null;
   provider: ExchangeUser;
@@ -172,6 +174,7 @@ const Activity: React.FC = () => {
         requesterConfirmed: boolean;
         status: 'PENDING' | 'ACTIVE' | 'COMPLETED';
         completedAt: string | null;
+        blockchainTxHash?: string | null;
       }>(`/api/exchanges/${exchange.id}/confirm`);
 
       // Update local state with confirmation status
@@ -185,6 +188,7 @@ const Activity: React.FC = () => {
                   requesterConfirmed: response.data!.requesterConfirmed,
                   status: response.data!.status,
                   completedAt: response.data!.completedAt,
+                  blockchainTxHash: response.data!.blockchainTxHash ?? ex.blockchainTxHash,
                 }
               : ex
           )
@@ -199,6 +203,7 @@ const Activity: React.FC = () => {
                 requesterConfirmed: response.data!.requesterConfirmed,
                 status: response.data!.status,
                 completedAt: response.data!.completedAt,
+                blockchainTxHash: response.data!.blockchainTxHash ?? prev.blockchainTxHash,
               }
             : prev
         );
@@ -614,10 +619,37 @@ const Activity: React.FC = () => {
                           )}
 
                           {selectedExchange.status === 'COMPLETED' && (
-                            <div className="w-full text-center p-4 bg-green-50 rounded-xl">
-                              <p className="text-green-700 font-medium">
-                                ✓ Both parties confirmed. Exchange completed!
-                              </p>
+                            <div className="space-y-4">
+                              <div className="w-full text-center p-4 bg-green-50 rounded-xl">
+                                <p className="text-green-700 font-medium">
+                                  ✓ Both parties confirmed. Exchange completed!
+                                </p>
+                              </div>
+
+                              {selectedExchange.blockchainTxHash && (
+                                <div className="bg-brand-50 border border-brand-100 rounded-2xl p-4">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <span className="text-xs font-bold text-brand-700 uppercase tracking-wider">
+                                      Blockchain Verification
+                                    </span>
+                                    <span className="flex items-center text-[10px] font-bold bg-brand-100 text-brand-700 px-2 py-0.5 rounded-full">
+                                      Immutably Recorded
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-brand-600 mb-3">
+                                    This transaction is secured on the Ethereum Sepolia network as permanent proof of trust.
+                                  </p>
+                                  <a
+                                    href={`https://sepolia.etherscan.io/tx/${selectedExchange.blockchainTxHash}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center justify-center gap-2 py-2.5 px-4 bg-white border border-brand-200 rounded-xl text-sm font-bold text-brand-700 hover:shadow-md transition-all group"
+                                  >
+                                    View on Etherscan
+                                    <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                  </a>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>

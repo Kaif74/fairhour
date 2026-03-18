@@ -275,7 +275,7 @@ const Messages: React.FC = () => {
         }
 
         setMessages((prev) => prev.filter((message) => message.id !== clientId));
-        setError(response?.message || 'Failed to send message.');
+        setError(typeof response?.message === 'string' ? response.message : 'Failed to send message.');
       }
     );
   };

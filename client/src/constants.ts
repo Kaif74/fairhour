@@ -140,6 +140,17 @@ export const API_ENDPOINTS = {
   CONVERSATIONS: {
     BASE: '/api/conversations',
   },
+  OCCUPATIONS: {
+    BASE: '/api/occupations',
+    GROUPS: '/api/occupations/groups',
+  },
+  REVIEWS: {
+    BASE: '/api/reviews',
+    PROVIDER: '/api/reviews/provider',
+  },
+  VALUATION: {
+    ESTIMATE: '/api/valuation/estimate',
+  },
 };
 
 // =============================================================================
@@ -162,6 +173,8 @@ export const APP_CONFIG = {
   DEFAULT_AVATAR_BG: '22c55e',
   DEFAULT_AVATAR_COLOR: 'fff',
   CREDIT_PER_HOUR: 1,
+  MIN_MULTIPLIER: 1.0,
+  MAX_MULTIPLIER: 2.5,
   MAX_DESCRIPTION_LENGTH: 2000,
   MIN_TITLE_LENGTH: 3,
   MIN_DESCRIPTION_LENGTH: 10,

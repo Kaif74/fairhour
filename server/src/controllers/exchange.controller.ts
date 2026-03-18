@@ -3,6 +3,8 @@ import prisma from '../utils/prisma';
 import { AppError } from '../middlewares/errorHandler.middleware';
 import { CreateExchangeInput } from '../schemas/exchange.schema';
 import { ensureConversationForExchange, lockConversationForExchange } from '../services/chat.service';
+import { skillValuationEngine } from '../services/valuation.service';
+import { blockchainService } from '../services/blockchain.service';
 
 /**
  * Request a service from a provider
@@ -43,41 +45,43 @@ export async function requestService(
             throw new AppError('Cannot request your own service', 400);
         }
 
-        // Calculate user's current balance before allowing the request
-        // Balance = hours earned as provider - hours spent as requester
-        // Excludes self-referential exchanges (signup bonuses) from spent calculation
-        const [hoursEarned, hoursSpent] = await Promise.all([
-            // Hours earned: sum of hours from COMPLETED exchanges where user is provider
-            prisma.exchange.aggregate({
-                where: {
-                    providerId: requesterId,
-                    status: 'COMPLETED'
-                },
-                _sum: { hours: true },
-            }),
-            // Hours spent: sum of hours from COMPLETED exchanges where user is requester
-            // Excludes self-referential exchanges (where user is both provider and requester)
-            prisma.exchange.aggregate({
-                where: {
-                    requesterId: requesterId,
-                    status: 'COMPLETED',
-                    NOT: {
-                        providerId: requesterId, // Exclude signup bonus
-                    },
-                },
-                _sum: { hours: true },
-            }),
-        ]);
+        // Calculate user's current credit balance before allowing the request
+        // Balance = credits earned as provider - credits spent as requester
+        // Uses creditsEarned (from valuation) when available, falls back to hours
+        const completedAsProvider = await prisma.exchange.findMany({
+            where: {
+                providerId: requesterId,
+                status: 'COMPLETED',
+            },
+            select: { creditsEarned: true, hours: true },
+        });
 
-        const earned = hoursEarned._sum.hours || 0;
-        const spent = hoursSpent._sum.hours || 0;
+        const completedAsRequester = await prisma.exchange.findMany({
+            where: {
+                requesterId: requesterId,
+                status: 'COMPLETED',
+                NOT: {
+                    providerId: requesterId, // Exclude signup bonus
+                },
+            },
+            select: { creditsEarned: true, hours: true },
+        });
+
+        // Sum credits earned (use creditsEarned if available, otherwise hours)
+        const earned = completedAsProvider.reduce(
+            (sum, ex) => sum + (ex.creditsEarned ?? ex.hours), 0
+        );
+        // Sum credits spent (credits spent = creditsEarned by the provider in that exchange)
+        const spent = completedAsRequester.reduce(
+            (sum, ex) => sum + (ex.creditsEarned ?? ex.hours), 0
+        );
         const currentBalance = earned - spent;
 
         // Check if user has sufficient balance for this request
         if (currentBalance < hours) {
             throw new AppError(
-                `Insufficient balance. You have ${currentBalance} hour(s) available, but this service requires ${hours} hour(s). ` +
-                `Please provide services to earn more hours first.`,
+                `Insufficient balance. You have ${currentBalance.toFixed(1)} credit(s) available, but this service requires ${hours} hour(s). ` +
+                `Please provide services to earn more credits first.`,
                 400
             );
         }
@@ -328,8 +332,8 @@ export async function confirmExchange(
         const existingExchange = await prisma.exchange.findUnique({
             where: { id },
             include: {
-                provider: { select: { id: true, name: true } },
-                requester: { select: { id: true, name: true } },
+                provider: { select: { id: true, name: true, walletAddress: true } },
+                requester: { select: { id: true, name: true, walletAddress: true } },
             },
         });
 
@@ -377,6 +381,40 @@ export async function confirmExchange(
             // Both confirmed - complete the exchange
             updateData.status = 'COMPLETED';
             updateData.completedAt = new Date();
+
+            // Calculate credits using SkillValuationEngine
+            try {
+                // Get the occupation from the service (if linked)
+                let occupationId: string | null = null;
+                if (existingExchange.serviceId) {
+                    const service = await prisma.service.findUnique({
+                        where: { id: existingExchange.serviceId },
+                        select: { occupationId: true },
+                    });
+                    occupationId = service?.occupationId || null;
+                }
+
+                const valuation = await skillValuationEngine.calculateCredits({
+                    hours: existingExchange.hours,
+                    occupationId,
+                    providerId: existingExchange.providerId,
+                });
+
+                (updateData as any).creditsEarned = valuation.creditsEarned;
+                (updateData as any).occupationCode = valuation.occupationCode;
+                (updateData as any).valuationDetails = {
+                    skillMultiplier: valuation.skillMultiplier,
+                    reputationFactor: valuation.reputationFactor,
+                    demandFactor: valuation.demandFactor,
+                    totalMultiplier: valuation.totalMultiplier,
+                    occupationTitle: valuation.occupationTitle,
+                    skillLevel: valuation.skillLevel,
+                };
+            } catch (valuationError) {
+                // Fallback: credits = hours (1:1) if valuation fails
+                console.error('Valuation error, falling back to 1:1:', valuationError);
+                (updateData as any).creditsEarned = existingExchange.hours;
+            }
         }
 
         const exchange = await prisma.exchange.update({
@@ -398,10 +436,45 @@ export async function confirmExchange(
             },
         });
 
+        // If completed, trigger the blockchain transaction
+        if (exchange.status === 'COMPLETED') {
+            const providerWallet = existingExchange.provider.walletAddress;
+            const requesterWallet = existingExchange.requester.walletAddress;
+
+            if (providerWallet && requesterWallet) {
+                try {
+                    const txHash = await blockchainService.recordServiceTransaction({
+                        providerWallet,
+                        receiverWallet: requesterWallet,
+                        hours: exchange.hours,
+                        credits: exchange.creditsEarned || exchange.hours,
+                        occupationCode: exchange.occupationCode || 'default'
+                    });
+
+                    if (txHash) {
+                        // Save the hash to the exchange record
+                        await prisma.exchange.update({
+                            where: { id: exchange.id },
+                            data: { blockchainTxHash: txHash }
+                        });
+                        (exchange as any).blockchainTxHash = txHash;
+                    }
+                } catch (bcError) {
+                    console.error('Blockchain logging failed but keeping internal tx completed:', bcError);
+                    // Do not fail the internal request if the blockchain simply timed out or failed 
+                }
+            } else {
+                console.log('Skipping blockchain tx: one or both users lack a walletAddress');
+            }
+        }
+
         // Determine response message
         let message: string;
         if (exchange.status === 'COMPLETED') {
-            message = 'Both parties confirmed. Exchange completed successfully!';
+            const creditInfo = exchange.creditsEarned
+                ? ` Provider earned ${exchange.creditsEarned} credits for ${exchange.hours} hour(s).`
+                : '';
+            message = `Both parties confirmed. Exchange completed successfully!${creditInfo}`;
         } else if (isProvider) {
             message = 'You confirmed service delivery. Waiting for requester to confirm receipt.';
         } else {

@@ -1,0 +1,1 @@
+-- This is an empty migration file to satisfy Prisma because the migration was marked as applied in the db but missing locally

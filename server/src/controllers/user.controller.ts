@@ -26,6 +26,7 @@ const userSelectFields = {
     bio: true,
     profileImageUrl: true,
     availability: true,
+    walletAddress: true,
     createdAt: true,
     updatedAt: true,
 };
@@ -108,7 +109,7 @@ export async function updateProfile(
             throw new AppError('User not authenticated', 401);
         }
 
-        const { name, location, bio, skills, availability, profileImageUrl } = req.body;
+        const { name, location, bio, skills, availability, profileImageUrl, walletAddress } = req.body;
 
         // Validate inputs
         if (name !== undefined && (typeof name !== 'string' || name.trim().length < 2)) {
@@ -131,6 +132,7 @@ export async function updateProfile(
             skills?: string[];
             availability?: string[];
             profileImageUrl?: string | null;
+            walletAddress?: string | null;
         } = {};
 
         if (name !== undefined) updateData.name = name.trim();
@@ -139,6 +141,7 @@ export async function updateProfile(
         if (skills !== undefined) updateData.skills = skills;
         if (availability !== undefined) updateData.availability = availability;
         if (profileImageUrl !== undefined) updateData.profileImageUrl = profileImageUrl || null;
+        if (walletAddress !== undefined) updateData.walletAddress = walletAddress || null;
 
         const user = await prisma.user.update({
             where: { id: req.user.userId },

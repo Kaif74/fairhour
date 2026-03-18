@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
 }
 
 // ============================================================================
@@ -49,6 +50,7 @@ model User {
   bio             String?
   profileImageUrl String?
   availability    String[] @default([])
+  walletAddress   String?  @unique
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -60,27 +62,32 @@ model User {
   conversationsAsUserA Conversation[] @relation("UserAConversations")
   conversationsAsUserB Conversation[] @relation("UserBConversations")
   messages             Message[]
+  reviewsGiven         Review[]   @relation("ReviewsGiven")
+  reviewsReceived      Review[]   @relation("ReviewsReceived")
 
   @@index([email])
 }
 
 /// Service model - represents services offered by users
 model Service {
-  id          String   @id @default(uuid())
-  userId      String
-  title       String
-  description String
-  category    String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
+  id           String   @id @default(uuid())
+  userId       String
+  title        String
+  description  String
+  category     String
+  occupationId String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
 
   // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  exchanges Exchange[]
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  occupation Occupation? @relation(fields: [occupationId], references: [id], onDelete: SetNull)
+  exchanges  Exchange[]
 
   @@index([userId])
   @@index([category])
   @@index([isActive])
+  @@index([occupationId])
 }
 
 /// Request model - represents requests for services from users
@@ -109,6 +116,10 @@ model Exchange {
   requesterId         String
   serviceId           String?
   hours               Float
+  creditsEarned       Float?         // Credits calculated by SkillValuationEngine
+  occupationCode      String?        // NCO occupation code at time of exchange
+  valuationDetails    Json?          // Breakdown: { skill_multiplier, reputation_factor, demand_factor, total_multiplier }
+  blockchainTxHash    String?        @unique // Immutable receipt hash on Ethereum network
   status              ExchangeStatus @default(PENDING)
   providerConfirmed   Boolean        @default(false)  // Provider marks service as delivered
   requesterConfirmed  Boolean        @default(false)  // Requester confirms service received
@@ -116,10 +127,11 @@ model Exchange {
   completedAt         DateTime?
 
   // Relations
-  provider  User @relation("ProviderExchanges", fields: [providerId], references: [id], onDelete: Cascade)
-  requester User @relation("RequesterExchanges", fields: [requesterId], references: [id], onDelete: Cascade)
-  service   Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  provider     User          @relation("ProviderExchanges", fields: [providerId], references: [id], onDelete: Cascade)
+  requester    User          @relation("RequesterExchanges", fields: [requesterId], references: [id], onDelete: Cascade)
+  service      Service?      @relation(fields: [serviceId], references: [id], onDelete: SetNull)
   conversation Conversation?
+  reviews      Review[]
 
   @@index([providerId])
   @@index([requesterId])
@@ -165,3 +177,58 @@ model Message {
   @@index([senderId])
 }
 
+// ============================================================================
+// SKILL VALUATION MODELS
+// ============================================================================
+
+/// Occupation model - NCO-2015 occupation classification for skill valuation
+model Occupation {
+  id             String   @id @default(uuid())
+  ncoCode        String   @unique
+  title          String
+  majorGroup     String
+  skillLevel     Int      // 1=Elementary, 2=Skilled, 3=Technical, 4=Professional
+  baseMultiplier Float    // 1.0, 1.2, 1.5, 1.8
+  description    String?
+  createdAt      DateTime @default(now())
+
+  // Relations
+  services     Service[]
+  serviceStats ServiceStats?
+
+  @@index([majorGroup])
+  @@index([skillLevel])
+}
+
+/// ServiceStats model - demand metrics for occupations
+model ServiceStats {
+  id                 String   @id @default(uuid())
+  occupationId       String   @unique
+  requestsLast30Days Int      @default(0)
+  providersAvailable Int      @default(1)
+  demandRatio        Float    @default(1.0)
+  updatedAt          DateTime @updatedAt
+
+  // Relations
+  occupation Occupation @relation(fields: [occupationId], references: [id], onDelete: Cascade)
+}
+
+/// Review model - ratings and reviews for completed exchanges
+model Review {
+  id         String   @id @default(uuid())
+  exchangeId String
+  reviewerId String
+  providerId String
+  rating     Int      // 1-5
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  // Relations
+  exchange Exchange @relation(fields: [exchangeId], references: [id], onDelete: Cascade)
+  reviewer User     @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Cascade)
+  provider User     @relation("ReviewsReceived", fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@unique([exchangeId, reviewerId]) // One review per person per exchange
+  @@index([providerId])
+  @@index([reviewerId])
+}

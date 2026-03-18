@@ -17,7 +17,17 @@ export async function createService(
             throw new AppError('User not authenticated', 401);
         }
 
-        const { title, description, category } = req.body;
+        const { title, description, category, occupationId } = req.body;
+
+        // Validate occupationId exists if provided
+        if (occupationId) {
+            const occupation = await prisma.occupation.findUnique({
+                where: { id: occupationId },
+            });
+            if (!occupation) {
+                throw new AppError('Invalid occupation: the selected skill classification does not exist', 400);
+            }
+        }
 
         const service = await prisma.service.create({
             data: {
@@ -25,6 +35,7 @@ export async function createService(
                 title,
                 description,
                 category,
+                occupationId: occupationId || null,
             },
             include: {
                 user: {
@@ -33,6 +44,7 @@ export async function createService(
                         name: true,
                     },
                 },
+                occupation: true,
             },
         });
 
@@ -85,6 +97,16 @@ export async function getServices(
                             location: true,
                             reputationScore: true,
                             profileImageUrl: true,
+                        },
+                    },
+                    occupation: {
+                        select: {
+                            id: true,
+                            ncoCode: true,
+                            title: true,
+                            majorGroup: true,
+                            skillLevel: true,
+                            baseMultiplier: true,
                         },
                     },
                 },
@@ -141,6 +163,7 @@ export async function getServiceById(
                         createdAt: true,
                     },
                 },
+                occupation: true,
             },
         });
 
@@ -204,7 +227,7 @@ export async function updateService(
         }
 
         const { id } = req.params;
-        const { title, description, category, isActive } = req.body;
+        const { title, description, category, isActive, occupationId } = req.body;
 
         // Check if service exists and belongs to user
         const existingService = await prisma.service.findUnique({
@@ -219,18 +242,30 @@ export async function updateService(
             throw new AppError('Not authorized to update this service', 403);
         }
 
+        // Validate occupationId exists if provided
+        if (occupationId) {
+            const occupation = await prisma.occupation.findUnique({
+                where: { id: occupationId },
+            });
+            if (!occupation) {
+                throw new AppError('Invalid occupation: the selected skill classification does not exist', 400);
+            }
+        }
+
         // Build update data
         const updateData: {
             title?: string;
             description?: string;
             category?: string;
             isActive?: boolean;
+            occupationId?: string | null;
         } = {};
 
         if (title !== undefined) updateData.title = title;
         if (description !== undefined) updateData.description = description;
         if (category !== undefined) updateData.category = category;
         if (isActive !== undefined) updateData.isActive = isActive;
+        if (occupationId !== undefined) updateData.occupationId = occupationId || null;
 
         const service = await prisma.service.update({
             where: { id },
@@ -242,6 +277,7 @@ export async function updateService(
                         name: true,
                     },
                 },
+                occupation: true,
             },
         });
 

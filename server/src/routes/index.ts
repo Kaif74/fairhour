@@ -5,6 +5,9 @@ import serviceRoutes from './service.routes';
 import requestRoutes from './request.routes';
 import exchangeRoutes from './exchange.routes';
 import conversationRoutes from './conversation.routes';
+import occupationRoutes from './occupation.routes';
+import reviewRoutes from './review.routes';
+import valuationRoutes from './valuation.routes';
 
 const router = Router();
 
@@ -24,5 +27,8 @@ router.use('/services', serviceRoutes);
 router.use('/requests', requestRoutes);
 router.use('/exchanges', exchangeRoutes);
 router.use('/conversations', conversationRoutes);
+router.use('/occupations', occupationRoutes);
+router.use('/reviews', reviewRoutes);
+router.use('/valuation', valuationRoutes);
 
 export default router;

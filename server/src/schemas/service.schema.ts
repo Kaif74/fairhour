@@ -16,6 +16,11 @@ export const createServiceSchema = z.object({
         .min(1, 'Category is required')
         .max(100, 'Category must be at most 100 characters')
         .trim(),
+    occupationId: z
+        .string()
+        .uuid('Invalid occupation ID')
+        .nullable()
+        .optional(),
 });
 
 export const updateServiceSchema = z.object({
@@ -39,6 +44,11 @@ export const updateServiceSchema = z.object({
         .optional(),
     isActive: z
         .boolean()
+        .optional(),
+    occupationId: z
+        .string()
+        .uuid('Invalid occupation ID')
+        .nullable()
         .optional(),
 });
 

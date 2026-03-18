@@ -41,6 +41,7 @@ export interface ApiUser {
   bio: string | null;
   profileImageUrl: string | null;
   availability: string[];
+  walletAddress: string | null;
   createdAt: string;
   stats?: UserStats;
 }
@@ -65,9 +66,62 @@ export interface ApiService {
   title: string;
   description: string;
   category: string;
+  occupationId: string | null;
   isActive: boolean;
   createdAt: string;
   user?: ApiServiceUser;
+  occupation?: ApiOccupation | null;
+}
+
+/**
+ * API Occupation - matches backend Occupation model
+ */
+export interface ApiOccupation {
+  id: string;
+  ncoCode: string;
+  title: string;
+  majorGroup: string;
+  skillLevel: number; // 1-4
+  baseMultiplier: number;
+  description?: string;
+}
+
+/**
+ * API Review - matches backend Review model
+ */
+export interface ApiReview {
+  id: string;
+  exchangeId: string;
+  reviewerId: string;
+  providerId: string;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
+  reviewer?: ApiServiceUser;
+}
+
+/**
+ * API Valuation Estimate
+ */
+export interface ApiValuationEstimate {
+  hours: number;
+  estimatedCredits: {
+    min: number;
+    max: number;
+  };
+  ratePerHour: {
+    min: number;
+    max: number;
+  };
+  breakdown: {
+    skillMultiplier: number;
+    skillLevel: number;
+    occupationTitle: string | null;
+    reputationFactor: number;
+    demandFactor: number;
+    averageRating: number | null;
+    reviewCount: number;
+  };
 }
 
 /**
@@ -93,9 +147,13 @@ export interface ApiExchange {
   providerId: string;
   requesterId: string;
   hours: number;
+  creditsEarned: number | null;
+  occupationCode: string | null;
+  valuationDetails: Record<string, number | string | null> | null;
   status: ExchangeStatus;
   providerConfirmed: boolean;
   requesterConfirmed: boolean;
+  blockchainTxHash: string | null;
   createdAt: string;
   completedAt: string | null;
   provider?: ApiServiceUser;
@@ -142,12 +200,16 @@ export interface ServiceDisplay {
   title: string;
   description: string;
   category: string;
-  skillLevel: 'Basic' | 'Intermediate' | 'Advanced';
+  skillLevel: 'Basic' | 'Intermediate' | 'Advanced' | 'Professional';
   rating: number;
   reviewCount: number;
   costPerHour: number;
   status?: ServiceStatus;
   totalHoursDelivered?: number;
+  occupation?: ApiOccupation | null;
+  occupationId?: string | null;
+  creditRateMin?: number;
+  creditRateMax?: number;
 }
 
 /**
@@ -302,10 +364,25 @@ export interface ExchangeRequest {
 // =============================================================================
 
 /**
+ * Map skill level number to display string
+ */
+function skillLevelToDisplay(level?: number): 'Basic' | 'Intermediate' | 'Advanced' | 'Professional' {
+  switch (level) {
+    case 4: return 'Professional';
+    case 3: return 'Advanced';
+    case 2: return 'Intermediate';
+    case 1: return 'Basic';
+    default: return 'Intermediate';
+  }
+}
+
+/**
  * Transform ApiService to ServiceDisplay for UI
  */
 export function apiServiceToDisplay(service: ApiService): ServiceDisplay {
   const user = service.user;
+  const occupation = service.occupation;
+  const multiplier = occupation?.baseMultiplier ?? 1;
   return {
     id: service.id,
     providerId: service.userId,
@@ -317,9 +394,13 @@ export function apiServiceToDisplay(service: ApiService): ServiceDisplay {
     title: service.title,
     description: service.description,
     category: service.category,
-    skillLevel: 'Intermediate',
+    skillLevel: skillLevelToDisplay(occupation?.skillLevel),
     rating: user?.reputationScore && user.reputationScore > 0 ? user.reputationScore : 4.5,
     reviewCount: 0,
-    costPerHour: 1,
+    costPerHour: multiplier,
+    occupation: occupation || null,
+    occupationId: service.occupationId,
+    creditRateMin: multiplier,
+    creditRateMax: parseFloat(Math.min(2.5, multiplier * 1.3).toFixed(1)),
   };
 }

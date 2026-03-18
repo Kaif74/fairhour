@@ -1,0 +1,3466 @@
+[
+  {
+    "ncoCode": "1111",
+    "title": "Legislators",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Legislators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1112",
+    "title": "Senior Government Officials",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Senior Government Officials (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1113",
+    "title": "Traditional Chiefs and Heads of Villages",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Traditional Chiefs and Heads of Villages (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1114",
+    "title": "Senior Officials of Special Interest Organizations",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Senior Officials of Special Interest Organizations (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1120",
+    "title": "Managing Directors and Chief Executives",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Managing Directors and Chief Executives (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1211",
+    "title": "Finance Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Finance Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1212",
+    "title": "Human Resource Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Human Resource Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1213",
+    "title": "Policy and Planning Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Policy and Planning Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1219",
+    "title": "Business Services and Administration Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Business Services and Administration Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1221",
+    "title": "Sales and Marketing Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Sales and Marketing Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1222",
+    "title": "Advertising and Public Relation Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Advertising and Public Relation Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1223",
+    "title": "Research and Development Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Research and Development Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1311",
+    "title": "Agricultural and Forestry Production Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Agricultural and Forestry Production Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1312",
+    "title": "Aquaculture and Fisheries Production Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Aquaculture and Fisheries Production Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1321",
+    "title": "Manufacturing Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Manufacturing Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1322",
+    "title": "Mining Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Mining Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1323",
+    "title": "Construction Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Construction Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1324",
+    "title": "Supply, Distribution and Related Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Supply, Distribution and Related Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1330",
+    "title": "Information and Communication Technology",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Information and Communication Technology (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1341",
+    "title": "Child Care Service Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Child Care Service Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1342",
+    "title": "Health Services Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Health Services Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1343",
+    "title": "Aged Care Services Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Aged Care Services Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1344",
+    "title": "Social Welfare Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Social Welfare Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1345",
+    "title": "Education Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Education Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1346",
+    "title": "Financial and Insurance Service Branch",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Financial and Insurance Service Branch (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1349",
+    "title": "Professional Services Managers Not Elsewhere",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Professional Services Managers Not Elsewhere (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1411",
+    "title": "Hotel Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Hotel Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1412",
+    "title": "Restaurant Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Restaurant Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1420",
+    "title": "Retail and Wholesale Trade Managers",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Retail and Wholesale Trade Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1431",
+    "title": "Sports, Recreation and Cultural Centre",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Sports, Recreation and Cultural Centre (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "1439",
+    "title": "Services Manager Not Elsewhere Classified",
+    "majorGroup": "Managers",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Services Manager Not Elsewhere Classified (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2111",
+    "title": "Physicists and Astronomers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Physicists and Astronomers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2112",
+    "title": "Meteorologists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Meteorologists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2113",
+    "title": "Chemists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Chemists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2114",
+    "title": "Geologists and Geophysicists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Geologists and Geophysicists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2120",
+    "title": "Mathematicians, Actuaries and Statisticians",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Mathematicians, Actuaries and Statisticians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2131",
+    "title": "Biologists, Botanists, Zoologists and Related",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Biologists, Botanists, Zoologists and Related (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2132",
+    "title": "Farming, Forestry and Fisheries Advisors",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Farming, Forestry and Fisheries Advisors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2133",
+    "title": "Environmental Protection Professionals",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Environmental Protection Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2141",
+    "title": "Industrial and Production Engineers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Industrial and Production Engineers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2142",
+    "title": "Civil Engineers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Civil Engineers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2143",
+    "title": "Environmental Engineers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Environmental Engineers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2144",
+    "title": "Mechanical Engineers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Mechanical Engineers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2145",
+    "title": "Chemical Engineers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Chemical Engineers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2146",
+    "title": "Mining Engineers, Metallurgists and Related",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Mining Engineers, Metallurgists and Related (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2149",
+    "title": "Engineering Professionals Not Elsewhere",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Engineering Professionals Not Elsewhere (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2151",
+    "title": "Electrical Engineers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Electrical Engineers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2152",
+    "title": "Electronics Engineers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Electronics Engineers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2153",
+    "title": "Telecommunication Engineers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Telecommunication Engineers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2161",
+    "title": "Building Architects",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Building Architects (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2162",
+    "title": "Landscape Architects",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Landscape Architects (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2163",
+    "title": "Product and Garment Designers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Product and Garment Designers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2164",
+    "title": "Town and Traffic Planners",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Town and Traffic Planners (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2165",
+    "title": "Cartographers and Surveyors",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Cartographers and Surveyors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2166",
+    "title": "Graphic and Multimedia Designers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Graphic and Multimedia Designers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2211",
+    "title": "Generalist Medical Practitioners",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Generalist Medical Practitioners (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2212",
+    "title": "Specialist Medical Practitioners",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Specialist Medical Practitioners (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2221",
+    "title": "Nursing Professionals",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Nursing Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2222",
+    "title": "Midwifery Professionals",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Midwifery Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2230",
+    "title": "Traditional and Complementary Medicine",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Traditional and Complementary Medicine (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2240",
+    "title": "Paramedical Practitioners",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Paramedical Practitioners (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2250",
+    "title": "Veterinarians",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Veterinarians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2261",
+    "title": "Dentists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Dentists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2262",
+    "title": "Pharmacists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Pharmacists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2263",
+    "title": "Environmental and Occupational Health and",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Environmental and Occupational Health and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2264",
+    "title": "Physiotherapists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Physiotherapists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2265",
+    "title": "Dieticians and Nutritionists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Dieticians and Nutritionists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2266",
+    "title": "Audiologists and Speech Therapists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Audiologists and Speech Therapists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2267",
+    "title": "Optometrists and Ophthalmic Opticians",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Optometrists and Ophthalmic Opticians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2269",
+    "title": "Health Professionals Not Elsewhere Classified",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Health Professionals Not Elsewhere Classified (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2310",
+    "title": "University and Higher Education Teachers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "University and Higher Education Teachers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2320",
+    "title": "Vocational Education Teachers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Vocational Education Teachers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2330",
+    "title": "Secondary Education Teachers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Secondary Education Teachers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2341",
+    "title": "Primary School Teachers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Primary School Teachers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2342",
+    "title": "Early Childhood Educators",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Early Childhood Educators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2351",
+    "title": "Education Method Specialists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Education Method Specialists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2353",
+    "title": "Other Language Professionals",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Other Language Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2354",
+    "title": "Other Music Teachers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Other Music Teachers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2355",
+    "title": "Other Arts Teachers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Other Arts Teachers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2356",
+    "title": "Information Technology Trainers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Information Technology Trainers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2359",
+    "title": "Teaching Professionals Not Elsewhere Classified",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Teaching Professionals Not Elsewhere Classified (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2411",
+    "title": "Accountants",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Accountants (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2412",
+    "title": "Financial and Investment Advisors",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Financial and Investment Advisors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2413",
+    "title": "Financial Analysts",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Financial Analysts (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2421",
+    "title": "Management and Organization Analysts",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Management and Organization Analysts (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2422",
+    "title": "Policy Administration Professionals",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Policy Administration Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2423",
+    "title": "Personal and Careers Professionals",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Personal and Careers Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2424",
+    "title": "Training and Staff Development Professionals",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Training and Staff Development Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2431",
+    "title": "Advertising and Marketing Professionals",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Advertising and Marketing Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2432",
+    "title": "Public Relations Professionals",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Public Relations Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2433",
+    "title": "Technical and Medical Sales Professional",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Technical and Medical Sales Professional (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2434",
+    "title": "Information and Communications Technology",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Information and Communications Technology (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2511",
+    "title": "System Analysts",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "System Analysts (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2512",
+    "title": "Software Developers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Software Developers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2513",
+    "title": "Web and Multimedia Developers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Web and Multimedia Developers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2514",
+    "title": "Applications Programmers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Applications Programmers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2519",
+    "title": "Software and Application Developers and",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Software and Application Developers and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2521",
+    "title": "Database designers and Administrators",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Database designers and Administrators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2522",
+    "title": "Systems Administrators",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Systems Administrators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2523",
+    "title": "Computer Network Professionals",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Computer Network Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2529",
+    "title": "Database and Network Professionals Not",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Database and Network Professionals Not (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2611",
+    "title": "Lawyers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Lawyers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2612",
+    "title": "Judges",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Judges (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2619",
+    "title": "Legal Professionals, Not Elsewhere Classified",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Legal Professionals, Not Elsewhere Classified (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2621",
+    "title": "Archivists and Curators",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Archivists and Curators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2622",
+    "title": "Librarians and Related Information",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Librarians and Related Information (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2631",
+    "title": "Economists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Economists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2632",
+    "title": "Sociologists, Anthropologists and Related",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Sociologists, Anthropologists and Related (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2633",
+    "title": "Philosophers, Historians and Political Scientists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Philosophers, Historians and Political Scientists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2634",
+    "title": "Psychologists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Psychologists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2635",
+    "title": "Social Work and Counselling Professionals",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Social Work and Counselling Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2636",
+    "title": "Religious Professionals",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Religious Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2641",
+    "title": "Authors and Related Writers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Authors and Related Writers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2642",
+    "title": "Journalists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Journalists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2643",
+    "title": "Translators, Interpreters and Other Linguists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Translators, Interpreters and Other Linguists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2651",
+    "title": "Visual Artists",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Visual Artists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2652",
+    "title": "Musicians, Singers and Composers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Musicians, Singers and Composers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2653",
+    "title": "Dancers and Choreographers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Dancers and Choreographers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2654",
+    "title": "Film, Stage and Related Directors and Producers",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Film, Stage and Related Directors and Producers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2655",
+    "title": "Actors",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Actors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2656",
+    "title": "Announcers on Radio, Television and Other",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Announcers on Radio, Television and Other (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "2659",
+    "title": "Creative and Performing Artists Not Elsewhere",
+    "majorGroup": "Professionals",
+    "skillLevel": 4,
+    "baseMultiplier": 1.8,
+    "description": "Creative and Performing Artists Not Elsewhere (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3111",
+    "title": "Chemical and Physical Science Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Chemical and Physical Science Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3112",
+    "title": "Civil Engineering Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Civil Engineering Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3113",
+    "title": "Electrical Engineering Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Electrical Engineering Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3114",
+    "title": "Electronics Engineering Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Electronics Engineering Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3115",
+    "title": "Mechanical Engineering Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Mechanical Engineering Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3116",
+    "title": "Chemical Engineering Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Chemical Engineering Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3117",
+    "title": "Mining and Metallurgical Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Mining and Metallurgical Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3118",
+    "title": "Draughtpersons",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Draughtpersons (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3119",
+    "title": "Physical and Engineering Science Technicians Not",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Physical and Engineering Science Technicians Not (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3121",
+    "title": "Mining Supervisors",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Mining Supervisors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3122",
+    "title": "Manufacturing Supervisors",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Manufacturing Supervisors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3123",
+    "title": "Construction Supervisors",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Construction Supervisors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3131",
+    "title": "Power Production Plant Operators",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Power Production Plant Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3132",
+    "title": "Incinerator and Water Treatment Plant",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Incinerator and Water Treatment Plant (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3133",
+    "title": "Chemical Processing Plant Controllers",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Chemical Processing Plant Controllers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3134",
+    "title": "Petroleum and Natural Gas Refining Plant",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Petroleum and Natural Gas Refining Plant (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3135",
+    "title": "Metal Production Process Controllers",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Metal Production Process Controllers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3139",
+    "title": "Process Control Technicians Not Elsewhere",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Process Control Technicians Not Elsewhere (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3141",
+    "title": "Life Science Technicians (Excluding Medical)",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Life Science Technicians (Excluding Medical) (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3142",
+    "title": "Agricultural Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Agricultural Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3143",
+    "title": "Forestry Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Forestry Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3151",
+    "title": "Ship\u2019s Engineers",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Ship\u2019s Engineers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3152",
+    "title": "Ship\u2019s Deck Officers and Pilots",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Ship\u2019s Deck Officers and Pilots (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3153",
+    "title": "Aircraft Pilots and Related Associate",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Aircraft Pilots and Related Associate (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3154",
+    "title": "Air Traffic Controllers",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Air Traffic Controllers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3155",
+    "title": "Air Traffic Safety Electronics Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Air Traffic Safety Electronics Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3211",
+    "title": "Medical Imaging and Therapeutic Equipment",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Medical Imaging and Therapeutic Equipment (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3212",
+    "title": "Medical and Pathology Laboratory Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Medical and Pathology Laboratory Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3213",
+    "title": "Pharmaceutical Technicians and Assistants",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Pharmaceutical Technicians and Assistants (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3214",
+    "title": "Medical and Dental Prosthetic Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Medical and Dental Prosthetic Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3221",
+    "title": "Nursing Associate Professionals",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Nursing Associate Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3222",
+    "title": "Midwifery Associate Professionals",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Midwifery Associate Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3230",
+    "title": "Traditional and Complementary Medicine",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Traditional and Complementary Medicine (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3240",
+    "title": "Veterinary Technicians and Assistants",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Veterinary Technicians and Assistants (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3251",
+    "title": "Dental Assistants and Therapists",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Dental Assistants and Therapists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3252",
+    "title": "Medical Records and Health Information",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Medical Records and Health Information (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3253",
+    "title": "Community Health Workers",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Community Health Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3254",
+    "title": "Dispensing Opticians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Dispensing Opticians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3255",
+    "title": "Physiotherapy Technicians and Assistants",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Physiotherapy Technicians and Assistants (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3256",
+    "title": "Medical Assistants",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Medical Assistants (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3257",
+    "title": "Environmental and Occupational Health",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Environmental and Occupational Health (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3258",
+    "title": "Ambulance Workers",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Ambulance Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3259",
+    "title": "Modern Health Associate Professionals Not",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Modern Health Associate Professionals Not (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3311",
+    "title": "Securities and Finance Dealers and Brokers",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Securities and Finance Dealers and Brokers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3312",
+    "title": "Credit and Loan Officers",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Credit and Loan Officers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3313",
+    "title": "Accounting Associate Professionals",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Accounting Associate Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3314",
+    "title": "Statistical, Mathematical and Related Associate",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Statistical, Mathematical and Related Associate (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3315",
+    "title": "Valuers and Loss Assessors",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Valuers and Loss Assessors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3321",
+    "title": "Insurance Representatives",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Insurance Representatives (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3322",
+    "title": "Commercial Sales Representatives",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Commercial Sales Representatives (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3323",
+    "title": "Buyers",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Buyers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3324",
+    "title": "Trade Brokers",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Trade Brokers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3331",
+    "title": "Clearing and Forwarding Agents",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Clearing and Forwarding Agents (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3332",
+    "title": "Conference and Event Planners",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Conference and Event Planners (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3333",
+    "title": "Employment Agents and Contractors",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Employment Agents and Contractors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3334",
+    "title": "Real Estate Agents and Property Managers",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Real Estate Agents and Property Managers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3339",
+    "title": "Business Service Agents Not Elsewhere Classified",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Business Service Agents Not Elsewhere Classified (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3341",
+    "title": "Office Supervisors",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Office Supervisors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3342",
+    "title": "Legal Secretaries",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Legal Secretaries (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3343",
+    "title": "Administrative and Executive Secretaries",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Administrative and Executive Secretaries (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3344",
+    "title": "Medical Secretaries",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Medical Secretaries (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3351",
+    "title": "Customs and Border Inspectors",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Customs and Border Inspectors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3352",
+    "title": "Government Tax and Excise Officials",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Government Tax and Excise Officials (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3353",
+    "title": "Government Social Benefits Officials",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Government Social Benefits Officials (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3354",
+    "title": "Government Licensing Officials",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Government Licensing Officials (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3355",
+    "title": "Police Inspectors and Detectives",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Police Inspectors and Detectives (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3359",
+    "title": "Government Regulatory Associate Professionals",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Government Regulatory Associate Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3411",
+    "title": "Legal and Related Associate Professional s",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Legal and Related Associate Professional s (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3412",
+    "title": "Social Work Associate Professionals",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Social Work Associate Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3413",
+    "title": "Religious Associate Professionals",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Religious Associate Professionals (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3421",
+    "title": "Athletes and Sports Players",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Athletes and Sports Players (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3422",
+    "title": "Sports Coaches, Instructors and Officials",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Sports Coaches, Instructors and Officials (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3423",
+    "title": "Fitness and Recreation Instructors, and",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Fitness and Recreation Instructors, and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3431",
+    "title": "Photographers",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Photographers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3432",
+    "title": "Interior Designers",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Interior Designers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3433",
+    "title": "Gallery, Museum and Library Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Gallery, Museum and Library Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3434",
+    "title": "Chefs",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Chefs (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3435",
+    "title": "Other Artistic and Cultural Associate",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Other Artistic and Cultural Associate (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3511",
+    "title": "Information and Communication Technology",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Information and Communication Technology (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3512",
+    "title": "Information and Communication Technology",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Information and Communication Technology (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3513",
+    "title": "Computer Network and Systems Technician",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Computer Network and Systems Technician (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3514",
+    "title": "Web Technician",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Web Technician (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3521",
+    "title": "Broadcasting and Audiovisual Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Broadcasting and Audiovisual Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "3522",
+    "title": "Telecommunication Engineering Technicians",
+    "majorGroup": "Technicians and Associate Professionals",
+    "skillLevel": 3,
+    "baseMultiplier": 1.5,
+    "description": "Telecommunication Engineering Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4110",
+    "title": "General Office Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "General Office Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4120",
+    "title": "Secretaries (General)",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Secretaries (General) (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4131",
+    "title": "Typists and Word Processing Operators",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Typists and Word Processing Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4132",
+    "title": "Data Entry Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Data Entry Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4211",
+    "title": "Bank Tellers and Related Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Bank Tellers and Related Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4212",
+    "title": "Bookmakers, Croupiers and Related",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Bookmakers, Croupiers and Related (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4213",
+    "title": "Pawnbrokers and Moneylenders",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Pawnbrokers and Moneylenders (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4214",
+    "title": "Debt Collectors and Related Workers",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Debt Collectors and Related Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4221",
+    "title": "Travel Consultants and Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Travel Consultants and Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4222",
+    "title": "Contact Centre Information Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Contact Centre Information Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4223",
+    "title": "Telephone Switchboard Operators",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Telephone Switchboard Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4224",
+    "title": "Hotel Receptionists",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Hotel Receptionists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4225",
+    "title": "Inquiry Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Inquiry Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4226",
+    "title": "Receptionist (General)",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Receptionist (General) (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4227",
+    "title": "Survey and Market Research Interviewers",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Survey and Market Research Interviewers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4229",
+    "title": "Client Information Worker Not Elsewhere",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Client Information Worker Not Elsewhere (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4311",
+    "title": "Accounting and Bookkeeping Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Accounting and Bookkeeping Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4312",
+    "title": "Statistical Finance and Insurance Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Statistical Finance and Insurance Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4313",
+    "title": "Payroll Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Payroll Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4321",
+    "title": "Stock Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Stock Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4322",
+    "title": "Production Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Production Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4323",
+    "title": "Transport Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Transport Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4411",
+    "title": "Library Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Library Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4412",
+    "title": "Mail Carriers and Sorting Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Mail Carriers and Sorting Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4413",
+    "title": "Coding, Proofreading and Related Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Coding, Proofreading and Related Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4414",
+    "title": "Scribes and Related Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Scribes and Related Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4415",
+    "title": "Filing and Copying Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Filing and Copying Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4416",
+    "title": "Personnel Clerks",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Personnel Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "4419",
+    "title": "Clerical Support Workers Not Elsewhere",
+    "majorGroup": "Clerical Support Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Clerical Support Workers Not Elsewhere (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5111",
+    "title": "Travel Attendants and Travel Stewards",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Travel Attendants and Travel Stewards (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5112",
+    "title": "Transport Conductors",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Transport Conductors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5113",
+    "title": "Travel Guides",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Travel Guides (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5120",
+    "title": "Cooks",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Cooks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5131",
+    "title": "Waiters",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Waiters (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5132",
+    "title": "Bartenders",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Bartenders (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5141",
+    "title": "Hairdressers",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Hairdressers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5142",
+    "title": "Beauticians and Related Workers",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Beauticians and Related Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5151",
+    "title": "Cleaning and Housekeeping Supervisors in",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Cleaning and Housekeeping Supervisors in (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5152",
+    "title": "Domestic Housekeepers",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Domestic Housekeepers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5153",
+    "title": "Building Caretakers",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Building Caretakers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5161",
+    "title": "Astrologers, Fortune Tellers and Related",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Astrologers, Fortune Tellers and Related (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5162",
+    "title": "Companions and Valets",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Companions and Valets (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5163",
+    "title": "Undertakers and Embalmers",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Undertakers and Embalmers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5164",
+    "title": "Pet Groomers and Animal Care Workers",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Pet Groomers and Animal Care Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5165",
+    "title": "Driving Instructors",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Driving Instructors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5169",
+    "title": "Personal Service Workers Not Elsewhere",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Personal Service Workers Not Elsewhere (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5211",
+    "title": "Stall and Market Salespersons",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Stall and Market Salespersons (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5212",
+    "title": "Street Food Salespersons",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Street Food Salespersons (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5221",
+    "title": "Shopkeepers",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Shopkeepers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5222",
+    "title": "Shop Supervisors",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Shop Supervisors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5223",
+    "title": "Shop Sales Assistants",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Shop Sales Assistants (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5230",
+    "title": "Cashiers and Ticket Clerks",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Cashiers and Ticket Clerks (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5241",
+    "title": "Fashion and Other Models",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Fashion and Other Models (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5242",
+    "title": "Sales Demonstrators",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Sales Demonstrators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5243",
+    "title": "Door -to-Door Salespersons",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Door -to-Door Salespersons (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5244",
+    "title": "Contact Centre Salespersons",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Contact Centre Salespersons (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5245",
+    "title": "Service Station Attendants",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Service Station Attendants (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5246",
+    "title": "Food Service Counter Attendants",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Food Service Counter Attendants (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5249",
+    "title": "Sales Workers Not Elsewhere Classified",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Sales Workers Not Elsewhere Classified (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5311",
+    "title": "Child Care Workers",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Child Care Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5312",
+    "title": "Teachers' Aides",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Teachers' Aides (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5321",
+    "title": "Healthcare Assistants",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Healthcare Assistants (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5322",
+    "title": "Home -Based Personal Care Workers",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Home -Based Personal Care Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5329",
+    "title": "Personal Care Workers in Health Services",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Personal Care Workers in Health Services (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5411",
+    "title": "Fire Fighters",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Fire Fighters (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5412",
+    "title": "Police Officers",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Police Officers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5413",
+    "title": "Prison Guards",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Prison Guards (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5414",
+    "title": "Security Guards",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Security Guards (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "5419",
+    "title": "Protective Services Workers Not Elsewhere",
+    "majorGroup": "Service and Sales Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Protective Services Workers Not Elsewhere (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6111",
+    "title": "Field Crop and Vegetable Growers",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Field Crop and Vegetable Growers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6112",
+    "title": "Tree and Shrub Crop  Growers",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Tree and Shrub Crop  Growers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6113",
+    "title": "Gardeners, Horticultural and Nursery",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Gardeners, Horticultural and Nursery (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6114",
+    "title": "Mixed Crop Growers",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Mixed Crop Growers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6115",
+    "title": "Medicinal and Aromatic Plant Cultivators",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Medicinal and Aromatic Plant Cultivators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6116",
+    "title": "Agriculture Information Management",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Agriculture Information Management (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6121",
+    "title": "Livestock and Dairy Producers",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Livestock and Dairy Producers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6122",
+    "title": "Poultry Producers",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Poultry Producers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6123",
+    "title": "Apiarists and Sericulturists",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Apiarists and Sericulturists (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6129",
+    "title": "Animal Producers Not Elsewhere Classified",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Animal Producers Not Elsewhere Classified (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6130",
+    "title": "Mixed Crop and Animal Workers",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Mixed Crop and Animal Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6210",
+    "title": "Forestry and Related Workers",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Forestry and Related Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6221",
+    "title": "Aquaculture Workers",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Aquaculture Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6222",
+    "title": "Inland and Coastal Waters Fishery Workers",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Inland and Coastal Waters Fishery Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6223",
+    "title": "Deep Sea Fishery Workers",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Deep Sea Fishery Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6224",
+    "title": "Hunters and Trappers",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Hunters and Trappers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6310",
+    "title": "Subsistence Crop Farmers",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Subsistence Crop Farmers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6320",
+    "title": "Subsistence Livestock Farmers",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Subsistence Livestock Farmers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6330",
+    "title": "Subsistence Mixed Crop and Livestock",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Subsistence Mixed Crop and Livestock (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "6340",
+    "title": "Subsistence Fishers, Hunters, Trappers and",
+    "majorGroup": "Skilled Agricultural Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Subsistence Fishers, Hunters, Trappers and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7111",
+    "title": "House Builders",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "House Builders (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7112",
+    "title": "Bricklayers and Related Workers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Bricklayers and Related Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7113",
+    "title": "Stonemasons, Stone Cutters, Splitters and",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Stonemasons, Stone Cutters, Splitters and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7114",
+    "title": "Concrete Placers, Concrete Finishers and",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Concrete Placers, Concrete Finishers and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7115",
+    "title": "Carpenters and Joiners",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Carpenters and Joiners (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7119",
+    "title": "Building Frame and Related Traders",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Building Frame and Related Traders (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7121",
+    "title": "Roofers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Roofers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7122",
+    "title": "Floor Layers and Tile Setters",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Floor Layers and Tile Setters (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7123",
+    "title": "Plasterers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Plasterers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7124",
+    "title": "Insulation Workers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Insulation Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7125",
+    "title": "Glaziers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Glaziers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7126",
+    "title": "Plumbers and Pipe Fitters",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Plumbers and Pipe Fitters (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7127",
+    "title": "Air-Conditioning and Refrigeration",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Air-Conditioning and Refrigeration (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7131",
+    "title": "Painters and Related Workers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Painters and Related Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7132",
+    "title": "Spray Painters and Varnishers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Spray Painters and Varnishers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7133",
+    "title": "Building Structure Cleaners",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Building Structure Cleaners (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7211",
+    "title": "Metal Moulders and Core Makers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Metal Moulders and Core Makers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7212",
+    "title": "Welders and Flame Cutters",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Welders and Flame Cutters (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7213",
+    "title": "Sheet Metal Workers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Sheet Metal Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7214",
+    "title": "Structural Metal Preparers and Erectors",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Structural Metal Preparers and Erectors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7215",
+    "title": "Riggers and Cable Splicers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Riggers and Cable Splicers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7221",
+    "title": "Blacksmiths, Hammersmith and Forging",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Blacksmiths, Hammersmith and Forging (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7223",
+    "title": "Metal Working Machine Tool Setters and",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Metal Working Machine Tool Setters and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7224",
+    "title": "Metal Polishers, Wheel Grinders and Tool",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Metal Polishers, Wheel Grinders and Tool (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7231",
+    "title": "Motor Vehicle Mechanics and Repairers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Motor Vehicle Mechanics and Repairers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7232",
+    "title": "Aircraft Engine Mechanics and Repairers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Aircraft Engine Mechanics and Repairers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7233",
+    "title": "Agricultural and Industrial Machinery",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Agricultural and Industrial Machinery (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7234",
+    "title": "Bicycle and Related Repairers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Bicycle and Related Repairers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7311",
+    "title": "Precision Instrument Makers and Repairers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Precision Instrument Makers and Repairers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7312",
+    "title": "Musical Instrument Makers and Tuners",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Musical Instrument Makers and Tuners (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7313",
+    "title": "Jewellery and Precision Metal Workers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Jewellery and Precision Metal Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7314",
+    "title": "Potters and Related Workers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Potters and Related Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7315",
+    "title": "Glass Makers, Cutters, Grinders and",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Glass Makers, Cutters, Grinders and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7316",
+    "title": "Signwriter, Decorative Painters, Engravers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Signwriter, Decorative Painters, Engravers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7317",
+    "title": "Handicraft Workers in Wood, Basketry and",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Handicraft Workers in Wood, Basketry and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7318",
+    "title": "Handicraft Workers in Textiles, Leather",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Handicraft Workers in Textiles, Leather (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7319",
+    "title": "Handicrafts Workers Not Elsewhere",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Handicrafts Workers Not Elsewhere (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7321",
+    "title": "Pre-Press Technicians",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Pre-Press Technicians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7322",
+    "title": "Printers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Printers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7323",
+    "title": "Print Finishing and Binding Workers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Print Finishing and Binding Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7411",
+    "title": "Building and Related Electricians",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Building and Related Electricians (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7412",
+    "title": "Electrical Mechanics and Fitters",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Electrical Mechanics and Fitters (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7413",
+    "title": "Electrical Line Installers and Repairers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Electrical Line Installers and Repairers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7419",
+    "title": "Electrical and Electronic Equipment",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Electrical and Electronic Equipment (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7421",
+    "title": "Electronic Mechanics and Servicers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Electronic Mechanics and Servicers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7422",
+    "title": "Information and Communications",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Information and Communications (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7511",
+    "title": "Butchers, Fishmongers and Related Food",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Butchers, Fishmongers and Related Food (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7512",
+    "title": "Bakers, Pastry Cooks and Confectionery",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Bakers, Pastry Cooks and Confectionery (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7513",
+    "title": "Dairy Products Makers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Dairy Products Makers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7514",
+    "title": "Fruits, Vegetables and Related Preservers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Fruits, Vegetables and Related Preservers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7515",
+    "title": "Food and Beverage Tasters and Graders",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Food and Beverage Tasters and Graders (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7516",
+    "title": "Tobacco Preparers and Tobacco Products",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Tobacco Preparers and Tobacco Products (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7521",
+    "title": "Wood Treaters",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Wood Treaters (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7522",
+    "title": "Cabinet Makers and Related Workers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Cabinet Makers and Related Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7523",
+    "title": "Wood Working Machine Tool Setters and",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Wood Working Machine Tool Setters and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7531",
+    "title": "Tailors, Dressmakers, Furriers and Hatters",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Tailors, Dressmakers, Furriers and Hatters (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7532",
+    "title": "Garment and Related Pattern Makers and",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Garment and Related Pattern Makers and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7533",
+    "title": "Sewing, Embroiderers and Related",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Sewing, Embroiderers and Related (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7534",
+    "title": "Upholsterers and Related Workers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Upholsterers and Related Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7535",
+    "title": "Pelt Dressers, Tanners and Fellmongers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Pelt Dressers, Tanners and Fellmongers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7536",
+    "title": "Shoemakers and Related Workers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Shoemakers and Related Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7541",
+    "title": "Underwater Divers",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Underwater Divers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7542",
+    "title": "Shotfirers and Blasters",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Shotfirers and Blasters (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7543",
+    "title": "Product Graders and Testers (Excluding",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Product Graders and Testers (Excluding (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7544",
+    "title": "Fumigators and Other Pest and Weed",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Fumigators and Other Pest and Weed (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "7549",
+    "title": "Craft and Related Workers Not Elsewhere",
+    "majorGroup": "Craft and Related Trades Workers",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Craft and Related Workers Not Elsewhere (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8111",
+    "title": "Miners and Quarriers",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Miners and Quarriers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8113",
+    "title": "Well Drillers and Borers and Related",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Well Drillers and Borers and Related (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8114",
+    "title": "Cement, Stone and Other Mineral Products",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Cement, Stone and Other Mineral Products (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8121",
+    "title": "Metal Processing Plant Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Metal Processing Plant Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8122",
+    "title": "Metal Finishing, Plating and Coating",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Metal Finishing, Plating and Coating (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8131",
+    "title": "Chemical Products Plant and Machine",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Chemical Products Plant and Machine (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8132",
+    "title": "Photographic Products Machine Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Photographic Products Machine Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8141",
+    "title": "Rubber Products Machine Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Rubber Products Machine Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8142",
+    "title": "Plastic Products Machine Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Plastic Products Machine Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8143",
+    "title": "Paper Products Machine Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Paper Products Machine Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8151",
+    "title": "Fibre Preparing, Spinning and Winding",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Fibre Preparing, Spinning and Winding (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8152",
+    "title": "Weaving and Knitting Machine Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Weaving and Knitting Machine Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8153",
+    "title": "Sewing Machine Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Sewing Machine Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8154",
+    "title": "Bleaching, Dyeing and Cleaning Machine",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Bleaching, Dyeing and Cleaning Machine (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8155",
+    "title": "Fur and Leather Preparing Machine",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Fur and Leather Preparing Machine (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8156",
+    "title": "Shoe Making and Related Machine",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Shoe Making and Related Machine (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8157",
+    "title": "Laundry Machine Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Laundry Machine Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8159",
+    "title": "Textile, Fur and Leather Products Machine",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Textile, Fur and Leather Products Machine (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8160",
+    "title": "Food and Related Products Machine",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Food and Related Products Machine (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8171",
+    "title": "Pulp and Papermaking Plant Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Pulp and Papermaking Plant Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8172",
+    "title": "Wood Processing Plant Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Wood Processing Plant Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8181",
+    "title": "Glass and Ceramics Plant Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Glass and Ceramics Plant Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8182",
+    "title": "Steam Engine and Boiler Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Steam Engine and Boiler Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8183",
+    "title": "Packing, Bottling and Labelling Machine",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Packing, Bottling and Labelling Machine (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8189",
+    "title": "Gem and Jewellery Machine Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Gem and Jewellery Machine Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8211",
+    "title": "Mechanical Machinery Assemblers",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Mechanical Machinery Assemblers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8212",
+    "title": "Electrical and Electronic Equipment",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Electrical and Electronic Equipment (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8219",
+    "title": "Assemblers Not Elsewhere Classified",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Assemblers Not Elsewhere Classified (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8311",
+    "title": "Locomotive Engine Drivers",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Locomotive Engine Drivers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8312",
+    "title": "Railway Braker, Signal and Switch",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Railway Braker, Signal and Switch (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8321",
+    "title": "Motorcycle Drivers",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Motorcycle Drivers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8322",
+    "title": "Car, Taxi and Van Drivers",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Car, Taxi and Van Drivers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8331",
+    "title": "Bus and Tram Drivers",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Bus and Tram Drivers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8332",
+    "title": "Heavy Truck and Lorry Drivers",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Heavy Truck and Lorry Drivers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8341",
+    "title": "Mobile Farm and Forestry Plant Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Mobile Farm and Forestry Plant Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8342",
+    "title": "Earth Moving and Related Plant Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Earth Moving and Related Plant Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8343",
+    "title": "Crane, Hoist and Related Plant Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Crane, Hoist and Related Plant Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8344",
+    "title": "Lifting Truck Operators",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Lifting Truck Operators (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "8350",
+    "title": "Ships\u2019 Deck Crews and Related Workers",
+    "majorGroup": "Plant and Machine Operators",
+    "skillLevel": 2,
+    "baseMultiplier": 1.2,
+    "description": "Ships\u2019 Deck Crews and Related Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9111",
+    "title": "Domestic Cleaners and Helpers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Domestic Cleaners and Helpers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9112",
+    "title": "Cleaners and Helpers in Offices, Hotels and",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Cleaners and Helpers in Offices, Hotels and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9121",
+    "title": "Hand Launderers and Pressers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Hand Launderers and Pressers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9122",
+    "title": "Vehicle Cleaners",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Vehicle Cleaners (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9123",
+    "title": "Window Cleaners",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Window Cleaners (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9129",
+    "title": "Other Cleaning Workers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Other Cleaning Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9211",
+    "title": "Crop Farm Labourers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Crop Farm Labourers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9212",
+    "title": "Livestock  Farm Labourers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Livestock  Farm Labourers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9213",
+    "title": "Mixed Crop and Livestock Farm Labourers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Mixed Crop and Livestock Farm Labourers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9214",
+    "title": "Garden and Horticultural Labourers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Garden and Horticultural Labourers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9215",
+    "title": "Forestry Labourers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Forestry Labourers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9216",
+    "title": "Fishery and Aquaculture Labourers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Fishery and Aquaculture Labourers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9311",
+    "title": "Mining and Quarrying  Labourers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Mining and Quarrying  Labourers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9312",
+    "title": "Civil Engineering Labourers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Civil Engineering Labourers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9313",
+    "title": "Building Construction Labourers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Building Construction Labourers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9321",
+    "title": "Hand Packers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Hand Packers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9329",
+    "title": "Manufacturing Labourers Not Elsewhere",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Manufacturing Labourers Not Elsewhere (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9331",
+    "title": "Hand and Pedal Vehicle Drivers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Hand and Pedal Vehicle Drivers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9332",
+    "title": "Drivers of Animal -Drawn Vehicles and",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Drivers of Animal -Drawn Vehicles and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9333",
+    "title": "Freight Handlers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Freight Handlers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9334",
+    "title": "Shelf Fillers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Shelf Fillers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9411",
+    "title": "Fast Food Preparers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Fast Food Preparers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9412",
+    "title": "Kitchen Helpers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Kitchen Helpers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9510",
+    "title": "Street and Related Service Workers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Street and Related Service Workers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9520",
+    "title": "Street Vendors (Excluding Food)",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Street Vendors (Excluding Food) (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9611",
+    "title": "Garbage and Recycling Collectors",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Garbage and Recycling Collectors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9612",
+    "title": "Refuse Sorters",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Refuse Sorters (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9613",
+    "title": "Sweepers and Related Labourers",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Sweepers and Related Labourers (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9621",
+    "title": "Messengers, Package Deliverers and",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Messengers, Package Deliverers and (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9622",
+    "title": "Odd Job Persons",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Odd Job Persons (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9623",
+    "title": "Meter Readers and Vending Machine",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Meter Readers and Vending Machine (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9624",
+    "title": "Water and Firewood Collectors",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Water and Firewood Collectors (Extracted from NCO 2015)"
+  },
+  {
+    "ncoCode": "9629",
+    "title": "Elementary Workers Not Elsewhere",
+    "majorGroup": "Elementary Occupations",
+    "skillLevel": 1,
+    "baseMultiplier": 1.0,
+    "description": "Elementary Workers Not Elsewhere (Extracted from NCO 2015)"
+  }
+]

@@ -43,6 +43,7 @@ export interface ProfileUpdateData {
   skills?: string[];
   availability?: string[];
   profileImageUrl?: string;
+  walletAddress?: string;
 }
 
 // =============================================================================

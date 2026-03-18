@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -15,6 +15,9 @@ import {
   AlertCircle,
   Edit3,
   Save,
+  TrendingUp,
+  Zap,
+  BarChart2,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import api from '../api';
@@ -42,9 +45,32 @@ interface ServiceDetails {
   title: string;
   description: string;
   category: string;
+  occupationId: string | null;
   isActive: boolean;
   createdAt: string;
   user: ServiceProvider;
+  occupation?: {
+    id: string;
+    ncoCode: string;
+    title: string;
+    majorGroup: string;
+    skillLevel: number;
+    baseMultiplier: number;
+    description?: string;
+  } | null;
+}
+
+interface ValuationData {
+  ratePerHour: { min: number; max: number };
+  breakdown: {
+    skillMultiplier: number;
+    skillLevel: number;
+    occupationTitle: string | null;
+    reputationFactor: number;
+    demandFactor: number;
+    averageRating: number | null;
+    reviewCount: number;
+  };
 }
 
 interface ApiResponse {
@@ -55,6 +81,7 @@ interface ApiResponse {
 const ServiceDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
 
   const [service, setService] = useState<ServiceDetails | null>(null);
@@ -77,6 +104,9 @@ const ServiceDetailsPage: React.FC = () => {
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
   const [editSuccess, setEditSuccess] = useState(false);
+
+  // Valuation data
+  const [valuation, setValuation] = useState<ValuationData | null>(null);
 
   // Check if current user is the owner
   const isOwner = user && service && user.id === service.userId;
@@ -104,6 +134,41 @@ const ServiceDetailsPage: React.FC = () => {
 
     fetchService();
   }, [id]);
+
+  // Handle auto-opening edit modal
+  useEffect(() => {
+    if (service && isOwner) {
+      const searchParams = new URLSearchParams(location.search);
+      if (searchParams.get('edit') === 'true') {
+        handleEditClick();
+        
+        // Clean up URL so refresh doesn't keep opening the modal
+        navigate(`/service/${service.id}`, { replace: true });
+      }
+    }
+  }, [service, isOwner, location.search, navigate]);
+
+  // Fetch valuation estimate when service loads
+  useEffect(() => {
+    const fetchValuation = async () => {
+      if (!service) return;
+      try {
+        const params = new URLSearchParams({ hours: '1' });
+        if (service.occupationId) params.set('occupationId', service.occupationId);
+        if (service.userId) params.set('providerId', service.userId);
+        const response = await api.get<{ ratePerHour: { min: number; max: number }; breakdown: ValuationData['breakdown'] }>(
+          `/api/valuation/estimate?${params.toString()}`,
+          { auth: false }
+        );
+        if (response.success && response.data) {
+          setValuation(response.data as unknown as ValuationData);
+        }
+      } catch {
+        // Valuation is optional, don't block the page
+      }
+    };
+    fetchValuation();
+  }, [service]);
 
   // Handle avail service click
   const handleAvailClick = () => {
@@ -327,8 +392,15 @@ const ServiceDetailsPage: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center text-brand-700">
                       <Clock className="w-6 h-6 mr-2" />
-                      <span className="text-2xl font-bold">1 hr</span>
-                      <span className="text-gray-500 ml-2">per session</span>
+                      <span className="text-2xl font-bold">
+                        {valuation
+                          ? valuation.ratePerHour.min === valuation.ratePerHour.max
+                            ? valuation.ratePerHour.min
+                            : `${valuation.ratePerHour.min}–${valuation.ratePerHour.max}`
+                          : service.occupation?.baseMultiplier ?? '1'
+                        }
+                      </span>
+                      <span className="text-gray-500 ml-2">credits per hour</span>
                     </div>
                     {isOwner ? (
                       <Button onClick={handleEditClick} variant="secondary" className="px-8">
@@ -448,6 +520,92 @@ const ServiceDetailsPage: React.FC = () => {
                   </div>
                 )}
               </div>
+
+              {/* Skill Valuation Card */}
+              {valuation && service.occupationId && (
+                <div className="bg-white rounded-2xl shadow-soft p-6">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-4 flex items-center">
+                    <Zap className="w-4 h-4 mr-2 text-yellow-500" />
+                    Skill Valuation
+                  </h4>
+                  <div className="space-y-3">
+                    {/* Skill Level */}
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                      <span className="text-gray-600 text-sm">Skill Level</span>
+                      <span className={`px-2.5 py-1 rounded-lg text-xs font-bold ${
+                        valuation.breakdown.skillLevel === 4 ? 'bg-purple-100 text-purple-700' :
+                        valuation.breakdown.skillLevel === 3 ? 'bg-blue-100 text-blue-700' :
+                        valuation.breakdown.skillLevel === 2 ? 'bg-green-100 text-green-700' :
+                        'bg-gray-100 text-gray-600'
+                      }`}>
+                        {valuation.breakdown.skillLevel === 4 ? 'Professional' :
+                         valuation.breakdown.skillLevel === 3 ? 'Advanced' :
+                         valuation.breakdown.skillLevel === 2 ? 'Intermediate' : 'Basic'}
+                      </span>
+                    </div>
+
+                    {/* Estimated Credits */}
+                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-brand-50 to-green-50 rounded-xl">
+                      <span className="text-gray-600 text-sm">Est. Credits/hr</span>
+                      <span className="font-bold text-brand-700">
+                        {valuation.ratePerHour.min === valuation.ratePerHour.max
+                          ? valuation.ratePerHour.min
+                          : `${valuation.ratePerHour.min}–${valuation.ratePerHour.max}`
+                        }
+                      </span>
+                    </div>
+
+                    {/* Skill Multiplier */}
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                      <span className="text-gray-600 text-sm">Skill Multiplier</span>
+                      <span className="font-semibold">×{valuation.breakdown.skillMultiplier}</span>
+                    </div>
+
+                    {/* Reputation */}
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                      <div className="flex items-center text-gray-600 text-sm">
+                        <TrendingUp className="w-3.5 h-3.5 mr-1" />
+                        Reputation
+                      </div>
+                      <div className="flex items-center">
+                        {valuation.breakdown.averageRating ? (
+                          <>
+                            <Star className="w-3.5 h-3.5 text-yellow-500 fill-current mr-1" />
+                            <span className="font-semibold">{valuation.breakdown.averageRating}</span>
+                            <span className="text-xs text-gray-400 ml-1">({valuation.breakdown.reviewCount})</span>
+                          </>
+                        ) : (
+                          <span className="text-sm text-gray-400">No reviews yet</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Demand */}
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                      <div className="flex items-center text-gray-600 text-sm">
+                        <BarChart2 className="w-3.5 h-3.5 mr-1" />
+                        Demand
+                      </div>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                        valuation.breakdown.demandFactor >= 1.3 ? 'bg-red-100 text-red-700' :
+                        valuation.breakdown.demandFactor >= 1.1 ? 'bg-yellow-100 text-yellow-700' :
+                        'bg-green-100 text-green-700'
+                      }`}>
+                        {valuation.breakdown.demandFactor >= 1.3 ? 'High' :
+                         valuation.breakdown.demandFactor >= 1.1 ? 'Medium' : 'Low'}
+                      </span>
+                    </div>
+
+                    {/* Occupation Name */}
+                    {valuation.breakdown.occupationTitle && (
+                      <div className="pt-2 border-t border-gray-100">
+                        <p className="text-xs text-gray-400">NCO Classification</p>
+                        <p className="text-sm font-medium text-gray-700">{valuation.breakdown.occupationTitle}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Quick Action CTA */}
               {isOwner ? (
