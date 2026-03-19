@@ -12,6 +12,7 @@ import {
   Check,
   Loader2,
   ExternalLink,
+  Star,
 } from 'lucide-react';
 import Button from '../components/Button';
 import PageTransition from '../components/PageTransition';
@@ -37,6 +38,7 @@ interface Exchange {
   blockchainTxHash: string | null;
   createdAt: string;
   completedAt: string | null;
+  hasMyReview?: boolean;
   provider: ExchangeUser;
   requester: ExchangeUser;
   userRole: 'provider' | 'requester';
@@ -53,7 +55,7 @@ interface ExchangesResponse {
 }
 
 const Activity: React.FC = () => {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
 
   const [filterRole, setFilterRole] = useState<'All' | 'Provider' | 'Requester'>('All');
   const [filterStatus, setFilterStatus] = useState<'All' | 'COMPLETED' | 'ACTIVE' | 'PENDING'>(
@@ -72,6 +74,12 @@ const Activity: React.FC = () => {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectExchangeId, setRejectExchangeId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [reviewExchange, setReviewExchange] = useState<Exchange | null>(null);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewError, setReviewError] = useState<string | null>(null);
+  const [reviewLoading, setReviewLoading] = useState(false);
 
   // Fetch exchanges from API
   useEffect(() => {
@@ -218,6 +226,59 @@ const Activity: React.FC = () => {
   const openRejectModal = (exchangeId: string) => {
     setRejectExchangeId(exchangeId);
     setShowRejectModal(true);
+  };
+
+  const openReviewModal = (exchange: Exchange) => {
+    setReviewExchange(exchange);
+    setReviewRating(5);
+    setReviewComment('');
+    setReviewError(null);
+    setShowReviewModal(true);
+  };
+
+  const handleSubmitReview = async () => {
+    if (!reviewExchange) return;
+
+    try {
+      setReviewLoading(true);
+      setReviewError(null);
+
+      await api.post('/api/reviews', {
+        exchangeId: reviewExchange.id,
+        rating: reviewRating,
+        comment: reviewComment.trim() || undefined,
+      });
+
+      setExchanges((prev) =>
+        prev.map((exchange) =>
+          exchange.id === reviewExchange.id ? { ...exchange, hasMyReview: true } : exchange
+        )
+      );
+      setSelectedExchange((prev) =>
+        prev?.id === reviewExchange.id ? { ...prev, hasMyReview: true } : prev
+      );
+
+      setShowReviewModal(false);
+      setReviewExchange(null);
+
+      await refreshUser();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to submit review';
+      setReviewError(message);
+
+      if (message.toLowerCase().includes('already reviewed')) {
+        setExchanges((prev) =>
+          prev.map((exchange) =>
+            exchange.id === reviewExchange.id ? { ...exchange, hasMyReview: true } : exchange
+          )
+        );
+        setSelectedExchange((prev) =>
+          prev?.id === reviewExchange.id ? { ...prev, hasMyReview: true } : prev
+        );
+      }
+    } finally {
+      setReviewLoading(false);
+    }
   };
 
   const getStatusStyle = (status: string) => {
@@ -626,6 +687,27 @@ const Activity: React.FC = () => {
                                 </p>
                               </div>
 
+                              {selectedExchange.userRole === 'requester' &&
+                                !selectedExchange.hasMyReview && (
+                                  <Button
+                                    onClick={() => openReviewModal(selectedExchange)}
+                                    fullWidth
+                                    className="shadow-lg shadow-brand-500/20"
+                                  >
+                                    <Star className="w-4 h-4 mr-2" />
+                                    Leave Review
+                                  </Button>
+                                )}
+
+                              {selectedExchange.userRole === 'requester' &&
+                                selectedExchange.hasMyReview && (
+                                  <div className="w-full text-center p-4 bg-brand-50 rounded-xl">
+                                    <p className="text-brand-700 font-medium">
+                                      ✓ You already reviewed this provider.
+                                    </p>
+                                  </div>
+                                )}
+
                               {selectedExchange.blockchainTxHash && (
                                 <div className="bg-brand-50 border border-brand-100 rounded-2xl p-4">
                                   <div className="flex items-center justify-between mb-2">
@@ -637,7 +719,8 @@ const Activity: React.FC = () => {
                                     </span>
                                   </div>
                                   <p className="text-xs text-brand-600 mb-3">
-                                    This transaction is secured on the Ethereum Sepolia network as permanent proof of trust.
+                                    This transaction is secured on the Ethereum Sepolia network as
+                                    permanent proof of trust.
                                   </p>
                                   <a
                                     href={`https://sepolia.etherscan.io/tx/${selectedExchange.blockchainTxHash}`}
@@ -713,6 +796,86 @@ const Activity: React.FC = () => {
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     ) : null}
                     {selectedExchange?.userRole === 'provider' ? 'Reject' : 'Cancel Request'}
+                  </Button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Review Modal */}
+        <AnimatePresence>
+          {showReviewModal && reviewExchange && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm"
+              onClick={() => setShowReviewModal(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6"
+              >
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Review Provider</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Rate your experience with {reviewExchange.provider.name} for this exchange.
+                </p>
+
+                <div className="mb-4">
+                  <p className="text-sm font-medium text-gray-700 mb-2">Rating</p>
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => setReviewRating(value)}
+                        className="p-1"
+                        aria-label={`Rate ${value} star${value > 1 ? 's' : ''}`}
+                      >
+                        <Star
+                          className={`w-6 h-6 ${value <= reviewRating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Comment (optional)
+                  </label>
+                  <textarea
+                    value={reviewComment}
+                    onChange={(e) => setReviewComment(e.target.value)}
+                    placeholder="Share your experience..."
+                    rows={3}
+                    maxLength={500}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent resize-none"
+                  />
+                </div>
+
+                {reviewError && (
+                  <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-100 text-sm text-red-700">
+                    {reviewError}
+                  </div>
+                )}
+
+                <div className="flex gap-3">
+                  <Button
+                    variant="secondary"
+                    onClick={() => setShowReviewModal(false)}
+                    className="flex-1"
+                    disabled={reviewLoading}
+                  >
+                    Cancel
+                  </Button>
+                  <Button onClick={handleSubmitReview} className="flex-1" disabled={reviewLoading}>
+                    {reviewLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                    Submit Review
                   </Button>
                 </div>
               </motion.div>
