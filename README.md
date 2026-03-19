@@ -1,172 +1,271 @@
 # FairHour
 
-A modern Time Banking Platform where users exchange skills and services using time credits instead of money. Inspired by professional freelance marketplaces.
+FairHour is a full-stack time banking platform where users exchange skills using time credits instead of money.
 
-## Project Structure
+It includes:
+
+- Skill-based credit valuation (NCO classification + reputation + demand + trust factors)
+- Exchange lifecycle with dual confirmation
+- Optional blockchain transaction logging to Sepolia
+- Realtime messaging tied to active exchanges
+
+---
+
+## Current Architecture
 
 ```
 fairhour/
-├── client/                  # Frontend (React + Vite + TypeScript)
-│   ├── src/
-│   │   ├── api/             # API client functions
-│   │   ├── components/      # Reusable UI components
-│   │   ├── hooks/           # Custom React hooks
-│   │   ├── pages/           # Page components
-│   │   ├── utils/           # Utility functions
-│   │   ├── App.tsx          # Main app component
-│   │   ├── main.tsx         # Entry point
-│   │   ├── types.ts         # TypeScript types
-│   │   └── constants.ts     # App constants and config
-│   ├── index.html
-│   ├── vite.config.ts
-│   ├── tsconfig.json
-│   ├── .eslintrc.cjs        # ESLint configuration
-│   └── package.json
-├── server/                  # Backend (Node.js + Express + Prisma)
-│   ├── src/
-│   │   ├── controllers/     # Request handlers
-│   │   ├── routes/          # API routes
-│   │   ├── middlewares/     # Express middlewares
-│   │   ├── schemas/         # Zod validation schemas
-│   │   ├── utils/           # Utility functions
-│   │   ├── app.ts           # Express app setup
-│   │   └── server.ts        # Server entry point
-│   ├── prisma/
-│   │   └── schema.prisma    # Database schema
-│   ├── package.json
-│   └── tsconfig.json
-├── .prettierrc              # Prettier configuration
-├── package.json             # Root scripts
-└── README.md
+├── client/       # React + Vite + TypeScript frontend
+├── server/       # Express + Prisma + PostgreSQL API + Socket.IO
+└── blockchain/   # Hardhat + Solidity (TimeBankLedger contract)
 ```
+
+### Client (React)
+
+- Auth, onboarding, profile, service browsing, requests, exchanges/activity, and messaging UI
+- Wallet connection from profile (MetaMask via ethers)
+- Valuation preview on service details
+
+### Server (Express + Prisma)
+
+- JWT auth, onboarding/profile management, services, requests, exchanges, reviews
+- Occupation catalog and valuation estimate APIs
+- Exchange completion triggers credit valuation and optional blockchain receipt logging
+- Socket.IO realtime chat with read status and rate limiting
+
+### Blockchain (Hardhat + Solidity)
+
+- `TimeBankLedger.sol` records service transactions and maintains provider/receiver balances
+- Deployment script outputs contract address for server integration
+
+---
+
+## Skill Valuation (Implemented)
+
+Credits are computed when an exchange moves to `COMPLETED`:
+
+`credits = hours × skill_multiplier × reputation_factor × demand_factor`
+
+With additional trust dampening for new providers and clamped total multiplier bounds.
+
+Data sources:
+
+- `Occupation` (NCO code, skill level, base multiplier)
+- `Review` history (average rating)
+- `ServiceStats` (demand ratio)
+- Provider completion track record (trust factor)
+
+Valuation endpoints:
+
+- `GET /api/valuation/estimate` (public preview)
+
+---
+
+## Blockchain Integration (Implemented)
+
+When both parties confirm an active exchange:
+
+1. Exchange is completed and credits are calculated.
+2. Server attempts to write the transaction on-chain through `blockchainService`.
+3. On success, `blockchainTxHash` is saved on the exchange.
+4. If chain logging fails, exchange remains completed off-chain (non-blocking fallback).
+
+Requirements for on-chain logging:
+
+- Provider and requester must both have `walletAddress` set.
+- Server must have `SEPOLIA_RPC`, `PRIVATE_KEY`, and `CONTRACT_ADDRESS` configured.
+
+---
+
+## Core Features
+
+- Authentication: register/login with JWT
+- Onboarding flow with skills, bio, availability, avatar
+- Profile updates including wallet connection
+- Service marketplace (CRUD, occupation tagging)
+- Public requests board and request management
+- Exchange lifecycle: pending → active → completed/rejected
+- Dual confirmation and conversation lock after completion
+- Realtime chat per exchange (Socket.IO)
+- Reviews for completed exchanges
+- Time balance and activity history
+
+---
+
+## API Modules
+
+Base URL: `http://localhost:5000/api` (unless overridden)
+
+- `/auth` - register/login
+- `/users` - profile, onboarding, balance
+- `/services` - service CRUD + browse
+- `/requests` - service requests
+- `/exchanges` - request service, activate/reject/confirm, my exchanges
+- `/conversations` - conversation list/messages/read
+- `/occupations` - NCO catalog/search/groups
+- `/reviews` - create and fetch provider reviews
+- `/valuation` - credit estimation preview
+
+Health:
+
+- `GET /health`
+- `GET /api/health`
+
+---
 
 ## Prerequisites
 
-- Node.js >= 18.0.0
-- PostgreSQL (for backend)
+- Node.js >= 18
+- PostgreSQL database
+- MetaMask (optional, for wallet linking)
+- Sepolia RPC + funded deployer wallet (optional, for blockchain logging)
 
-## Getting Started
+---
 
-### 1. Install Dependencies
+## Setup
+
+### 1) Install dependencies
+
+From project root:
 
 ```bash
-# Install both client and server dependencies
 npm run install:all
-
-# Or install individually
-npm run install:client
-npm run install:server
 ```
 
-### 2. Setup Environment Variables
-
-**Client** (`client/.env.local`):
-```env
-GEMINI_API_KEY=your_gemini_api_key
-```
-
-**Server** (`server/.env`):
-```env
-DATABASE_URL=postgresql://user:password@localhost:5432/fairhour
-DIRECT_URL=postgresql://user:password@localhost:5432/fairhour
-JWT_SECRET=your_jwt_secret
-JWT_EXPIRES_IN=7d
-PORT=4000
-NODE_ENV=development
-BCRYPT_SALT_ROUNDS=12
-CORS_ORIGIN=http://localhost:3000
-```
-
-### 3. Setup Database (Server)
+Install blockchain dependencies separately:
 
 ```bash
-# Generate Prisma client
+cd blockchain
+npm install
+```
+
+### 2) Configure environment files
+
+#### Server (`server/.env`)
+
+```env
+# Required
+DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/fairhour"
+DIRECT_DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/fairhour"
+JWT_SECRET="replace-with-strong-secret"
+
+# Optional (defaults shown)
+JWT_EXPIRES_IN="7d"
+PORT=5000
+NODE_ENV="development"
+CORS_ORIGIN="http://localhost:3000"
+SOCKET_PATH="/socket.io"
+REDIS_URL=""
+
+# Blockchain integration (optional)
+SEPOLIA_RPC=""
+PRIVATE_KEY=""
+CONTRACT_ADDRESS=""
+```
+
+#### Client (`client/.env`)
+
+```env
+VITE_API_URL=http://localhost:5000
+VITE_SOCKET_URL=http://localhost:5000
+VITE_SOCKET_PATH=/socket.io
+
+# Optional (currently passed by vite config)
+GEMINI_API_KEY=
+```
+
+### 3) Prepare database
+
+From root:
+
+```bash
 npm run prisma:generate
-
-# Run migrations
 npm run prisma:migrate
-
-# Open Prisma Studio (optional)
-npm run prisma:studio
 ```
 
-### 4. Run Development Servers
+Optional: seed occupation data
 
 ```bash
-# Run frontend (port 3000)
-npm run dev:client
-
-# Run backend (port 4000)
-npm run dev:server
+cd server
+npm run seed
 ```
 
-## Code Quality
+### 4) Run app in development
 
-### Linting & Formatting
-
-The project uses ESLint and Prettier for code quality:
+From root:
 
 ```bash
-# Run ESLint (in client directory)
-cd client
-npm run lint
-
-# Fix auto-fixable issues
-npm run lint -- --fix
-
-# Format code with Prettier
-npm run format
+npm run dev
 ```
 
-### Configuration Files
+This starts:
 
-- **ESLint**: `client/.eslintrc.cjs` - TypeScript and React-specific rules
-- **Prettier**: `.prettierrc` (root level) - Consistent code formatting
+- Client: `http://localhost:3000`
+- Server: `http://localhost:5000`
 
-## Available Scripts
+---
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev:client` | Start frontend dev server |
-| `npm run dev:server` | Start backend dev server |
-| `npm run build:client` | Build frontend for production |
-| `npm run build:server` | Build backend for production |
-| `npm run install:all` | Install all dependencies |
-| `npm run prisma:generate` | Generate Prisma client |
-| `npm run prisma:migrate` | Run database migrations |
-| `npm run prisma:studio` | Open Prisma Studio |
+## Blockchain Deployment (Optional)
 
-### Client-specific Scripts
+Deploy contract from `blockchain/`:
 
-| Script | Description |
-|--------|-------------|
-| `npm run lint` | Run ESLint checks |
-| `npm run format` | Format code with Prettier |
+```bash
+cd blockchain
+npm run compile
+npm run deploy
+```
 
-## Tech Stack
+Copy deployed address into `server/.env` as `CONTRACT_ADDRESS`.
 
-### Frontend
-- React 19
-- TypeScript
-- Vite
-- React Router v7
-- Framer Motion
-- Tailwind CSS
-- Recharts
-- Lucide Icons
-- ESLint + Prettier
+---
 
-### Backend
-- Node.js
-- Express
-- TypeScript
-- Prisma ORM
-- PostgreSQL
-- JWT Authentication
-- Zod Validation
-- bcrypt
+## Useful Scripts
+
+### Root
+
+| Script                    | Description                  |
+| ------------------------- | ---------------------------- |
+| `npm run dev`             | Run client + server together |
+| `npm run dev:client`      | Run frontend only            |
+| `npm run dev:server`      | Run backend only             |
+| `npm run build`           | Build client + server        |
+| `npm run install:all`     | Install client + server deps |
+| `npm run prisma:generate` | Generate Prisma client       |
+| `npm run prisma:migrate`  | Run Prisma migrations        |
+| `npm run prisma:studio`   | Open Prisma Studio           |
+
+### Client (`client/`)
+
+| Script          | Description           |
+| --------------- | --------------------- |
+| `npm run dev`   | Start Vite dev server |
+| `npm run build` | Build frontend        |
+| `npm run lint`  | Lint client code      |
+
+### Server (`server/`)
+
+| Script          | Description               |
+| --------------- | ------------------------- |
+| `npm run dev`   | Start API with hot reload |
+| `npm run build` | Compile TypeScript        |
+| `npm start`     | Run compiled server       |
+| `npm run seed`  | Seed occupations/stats    |
+
+### Blockchain (`blockchain/`)
+
+| Script            | Description                        |
+| ----------------- | ---------------------------------- |
+| `npm run compile` | Compile smart contracts            |
+| `npm run deploy`  | Deploy `TimeBankLedger` to Sepolia |
+
+---
+
+## Notes
+
+- Never commit real secrets in `.env` files.
+- Blockchain logging is intentionally non-blocking; core platform flow continues if chain write fails.
+- Conversations are locked when an exchange is fully completed.
 
 ## License
 
 MIT
-
