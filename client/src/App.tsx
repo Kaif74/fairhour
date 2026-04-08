@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Navbar from './components/Navbar';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
@@ -198,6 +199,7 @@ const App: React.FC = () => {
     <AuthProvider>
       <Router>
         <AppRoutes />
+        <SpeedInsights />
       </Router>
     </AuthProvider>
   );
