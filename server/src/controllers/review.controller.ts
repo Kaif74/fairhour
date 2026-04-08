@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
+import { CredibilityEventType } from '@prisma/client';
 import prisma from '../utils/prisma';
 import { AppError } from '../middlewares/errorHandler.middleware';
+import { credibilityService } from '../services/credibility.service';
 
 /**
  * Create a review for a completed exchange
@@ -27,6 +29,13 @@ export async function createReview(
         // Fetch the exchange
         const exchange = await prisma.exchange.findUnique({
             where: { id: exchangeId },
+            include: {
+                service: {
+                    select: {
+                        occupationId: true,
+                    },
+                },
+            },
         });
 
         if (!exchange) {
@@ -86,6 +95,38 @@ export async function createReview(
                 where: { id: exchange.providerId },
                 data: { reputationScore: avgRating._avg.rating },
             });
+        }
+
+        if (exchange.service?.occupationId) {
+            const occupationId = exchange.service.occupationId;
+
+            await credibilityService.logEvent({
+                userId: exchange.providerId,
+                occupationId,
+                eventType: CredibilityEventType.REVIEW_ADDED,
+                metadata: {
+                    reviewId: review.id,
+                    exchangeId,
+                    reviewerId,
+                    rating,
+                },
+            });
+
+            if (rating <= 2) {
+                await credibilityService.logEvent({
+                    userId: exchange.providerId,
+                    occupationId,
+                    eventType: CredibilityEventType.DISPUTE,
+                    metadata: {
+                        reviewId: review.id,
+                        exchangeId,
+                        reviewerId,
+                        rating,
+                    },
+                });
+            }
+
+            await credibilityService.calculateExperienceScore(exchange.providerId, occupationId);
         }
 
         res.status(201).json({

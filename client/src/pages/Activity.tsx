@@ -5,7 +5,6 @@ import {
   Filter,
   Calendar,
   Clock,
-  Download,
   ChevronRight,
   X,
   AlertCircle,
@@ -15,9 +14,18 @@ import {
   Star,
 } from 'lucide-react';
 import Button from '../components/Button';
+import ExchangeOtpPhaseCard from '../components/ExchangeOtpPhaseCard';
 import PageTransition from '../components/PageTransition';
 import { useAuth } from '../hooks/useAuth';
 import api from '../api';
+import {
+  generateCompletionOtp,
+  generateStartOtp,
+  getExchangeOtpStatus,
+  verifyCompletionOtp,
+  verifyStartOtp,
+} from '../api/exchangeOtp';
+import { ApiExchangeOtpStatus } from '../types';
 
 // Types for exchange data
 interface ExchangeUser {
@@ -32,11 +40,12 @@ interface Exchange {
   providerId: string;
   requesterId: string;
   hours: number;
-  status: 'PENDING' | 'ACTIVE' | 'COMPLETED';
+  status: 'PENDING' | 'ACCEPTED' | 'ACTIVE' | 'COMPLETED';
   providerConfirmed: boolean;
   requesterConfirmed: boolean;
   blockchainTxHash: string | null;
   createdAt: string;
+  startedAt: string | null;
   completedAt: string | null;
   hasMyReview?: boolean;
   provider: ExchangeUser;
@@ -58,9 +67,9 @@ const Activity: React.FC = () => {
   const { user, refreshUser } = useAuth();
 
   const [filterRole, setFilterRole] = useState<'All' | 'Provider' | 'Requester'>('All');
-  const [filterStatus, setFilterStatus] = useState<'All' | 'COMPLETED' | 'ACTIVE' | 'PENDING'>(
-    'All'
-  );
+  const [filterStatus, setFilterStatus] = useState<
+    'All' | 'COMPLETED' | 'ACTIVE' | 'ACCEPTED' | 'PENDING'
+  >('All');
   const [selectedExchange, setSelectedExchange] = useState<Exchange | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -71,6 +80,17 @@ const Activity: React.FC = () => {
 
   // Action states
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [otpActionLoading, setOtpActionLoading] = useState<string | null>(null);
+  const [otpStatus, setOtpStatus] = useState<ApiExchangeOtpStatus | null>(null);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpError, setOtpError] = useState<string | null>(null);
+  const [otpNotice, setOtpNotice] = useState<string | null>(null);
+  const [revealedOtps, setRevealedOtps] = useState<{ start: string | null; completion: string | null }>({
+    start: null,
+    completion: null,
+  });
+  const [startOtpInput, setStartOtpInput] = useState('');
+  const [completionOtpInput, setCompletionOtpInput] = useState('');
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectExchangeId, setRejectExchangeId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
@@ -114,6 +134,85 @@ const Activity: React.FC = () => {
     fetchExchanges();
   }, []);
 
+  useEffect(() => {
+    const loadOtpStatus = async () => {
+      if (!selectedExchange || selectedExchange.status === 'PENDING') {
+        setOtpStatus(null);
+        setOtpError(null);
+        setOtpNotice(null);
+        setRevealedOtps({ start: null, completion: null });
+        setStartOtpInput('');
+        setCompletionOtpInput('');
+        return;
+      }
+
+      try {
+        setOtpLoading(true);
+        setOtpError(null);
+        const status = await getExchangeOtpStatus(selectedExchange.id);
+        setOtpStatus(status);
+      } catch (err) {
+        setOtpError(err instanceof Error ? err.message : 'Failed to load OTP status');
+      } finally {
+        setOtpLoading(false);
+      }
+    };
+
+    loadOtpStatus();
+  }, [selectedExchange?.id, selectedExchange?.status]);
+
+  const updateExchangeState = (exchangeUpdate: {
+    id: string;
+    status: Exchange['status'];
+    startedAt: string | null;
+    completedAt: string | null;
+    providerConfirmed: boolean;
+    requesterConfirmed: boolean;
+    blockchainTxHash: string | null;
+  }) => {
+    setExchanges((prev) =>
+      prev.map((exchange) =>
+        exchange.id === exchangeUpdate.id
+          ? {
+              ...exchange,
+              status: exchangeUpdate.status,
+              startedAt: exchangeUpdate.startedAt,
+              completedAt: exchangeUpdate.completedAt,
+              providerConfirmed: exchangeUpdate.providerConfirmed,
+              requesterConfirmed: exchangeUpdate.requesterConfirmed,
+              blockchainTxHash: exchangeUpdate.blockchainTxHash,
+            }
+          : exchange
+      )
+    );
+
+    setSelectedExchange((prev) =>
+      prev?.id === exchangeUpdate.id
+        ? {
+            ...prev,
+            status: exchangeUpdate.status,
+            startedAt: exchangeUpdate.startedAt,
+            completedAt: exchangeUpdate.completedAt,
+            providerConfirmed: exchangeUpdate.providerConfirmed,
+            requesterConfirmed: exchangeUpdate.requesterConfirmed,
+            blockchainTxHash: exchangeUpdate.blockchainTxHash,
+          }
+        : prev
+    );
+  };
+
+  const handleCopyOtp = async (otp: string | null) => {
+    if (!otp) return;
+
+    try {
+      await navigator.clipboard.writeText(otp);
+      setOtpNotice('OTP copied. Share it directly with the other participant.');
+      setOtpError(null);
+    } catch {
+      setOtpError('Could not copy OTP automatically. Please copy it manually.');
+    }
+  };
+
   // Filter exchanges
   const filteredActivity = exchanges.filter((item) => {
     if (filterRole === 'Provider' && item.userRole !== 'provider') return false;
@@ -134,14 +233,31 @@ const Activity: React.FC = () => {
   const handleAccept = async (exchangeId: string) => {
     try {
       setActionLoading(exchangeId);
-      await api.put(`/api/exchanges/${exchangeId}/activate`);
-
-      // Update local state
-      setExchanges((prev) =>
-        prev.map((ex) => (ex.id === exchangeId ? { ...ex, status: 'ACTIVE' as const } : ex))
+      const response = await api.put<Exchange & { otpStatus?: ApiExchangeOtpStatus }>(
+        `/api/exchanges/${exchangeId}/activate`
       );
 
-      setSelectedExchange(null);
+      if (response.success && response.data) {
+        updateExchangeState({
+          id: response.data.id,
+          status: response.data.status,
+          startedAt: response.data.startedAt,
+          completedAt: response.data.completedAt,
+          providerConfirmed: response.data.providerConfirmed,
+          requesterConfirmed: response.data.requesterConfirmed,
+          blockchainTxHash: response.data.blockchainTxHash,
+        });
+
+        if ((response.data as any).otpStatus) {
+          setOtpStatus((response.data as any).otpStatus);
+          setRevealedOtps({
+            start: (response.data as any).revealedOtp ?? null,
+            completion: null,
+          });
+          setOtpNotice('Request accepted. Share the start OTP with the receiver to begin.');
+          setOtpError(null);
+        }
+      }
     } catch (err) {
       console.error('Failed to accept request:', err);
     } finally {
@@ -173,53 +289,69 @@ const Activity: React.FC = () => {
     }
   };
 
-  // Confirm an exchange (both parties must confirm to complete)
-  const handleConfirm = async (exchange: Exchange) => {
+  const handleGenerateStartOtp = async (exchangeId: string) => {
     try {
-      setActionLoading(exchange.id);
-      const response = await api.put<{
-        providerConfirmed: boolean;
-        requesterConfirmed: boolean;
-        status: 'PENDING' | 'ACTIVE' | 'COMPLETED';
-        completedAt: string | null;
-        blockchainTxHash?: string | null;
-      }>(`/api/exchanges/${exchange.id}/confirm`);
-
-      // Update local state with confirmation status
-      if (response.success && response.data) {
-        setExchanges((prev) =>
-          prev.map((ex) =>
-            ex.id === exchange.id
-              ? {
-                  ...ex,
-                  providerConfirmed: response.data!.providerConfirmed,
-                  requesterConfirmed: response.data!.requesterConfirmed,
-                  status: response.data!.status,
-                  completedAt: response.data!.completedAt,
-                  blockchainTxHash: response.data!.blockchainTxHash ?? ex.blockchainTxHash,
-                }
-              : ex
-          )
-        );
-
-        // Update selected exchange if still open
-        setSelectedExchange((prev) =>
-          prev?.id === exchange.id
-            ? {
-                ...prev,
-                providerConfirmed: response.data!.providerConfirmed,
-                requesterConfirmed: response.data!.requesterConfirmed,
-                status: response.data!.status,
-                completedAt: response.data!.completedAt,
-                blockchainTxHash: response.data!.blockchainTxHash ?? prev.blockchainTxHash,
-              }
-            : prev
-        );
-      }
+      setOtpActionLoading('start-generate');
+      const result = await generateStartOtp(exchangeId);
+      updateExchangeState(result.exchange);
+      setOtpStatus(result.otpStatus);
+      setRevealedOtps((prev) => ({ ...prev, start: result.revealedOtp }));
+      setOtpNotice('Start OTP ready. Share it with the receiver.');
+      setOtpError(null);
     } catch (err) {
-      console.error('Failed to confirm exchange:', err);
+      setOtpError(err instanceof Error ? err.message : 'Failed to generate start OTP');
     } finally {
-      setActionLoading(null);
+      setOtpActionLoading(null);
+    }
+  };
+
+  const handleVerifyStartOtp = async (exchangeId: string) => {
+    try {
+      setOtpActionLoading('start-verify');
+      const result = await verifyStartOtp(exchangeId, startOtpInput);
+      updateExchangeState(result.exchange);
+      setOtpStatus(result.otpStatus);
+      setRevealedOtps((prev) => ({ ...prev, start: null }));
+      setOtpNotice('Start verification complete. The service is now in progress.');
+      setOtpError(null);
+      setStartOtpInput('');
+    } catch (err) {
+      setOtpError(err instanceof Error ? err.message : 'Failed to verify start OTP');
+    } finally {
+      setOtpActionLoading(null);
+    }
+  };
+
+  const handleGenerateCompletionOtp = async (exchangeId: string) => {
+    try {
+      setOtpActionLoading('completion-generate');
+      const result = await generateCompletionOtp(exchangeId);
+      updateExchangeState(result.exchange);
+      setOtpStatus(result.otpStatus);
+      setRevealedOtps((prev) => ({ ...prev, completion: result.revealedOtp }));
+      setOtpNotice('Completion OTP ready. Share it with the provider when the work is done.');
+      setOtpError(null);
+    } catch (err) {
+      setOtpError(err instanceof Error ? err.message : 'Failed to generate completion OTP');
+    } finally {
+      setOtpActionLoading(null);
+    }
+  };
+
+  const handleVerifyCompletionOtp = async (exchangeId: string) => {
+    try {
+      setOtpActionLoading('completion-verify');
+      const result = await verifyCompletionOtp(exchangeId, completionOtpInput);
+      updateExchangeState(result.exchange);
+      setOtpStatus(result.otpStatus);
+      setRevealedOtps((prev) => ({ ...prev, completion: null }));
+      setOtpNotice('Completion verification complete. The exchange is now complete.');
+      setOtpError(null);
+      setCompletionOtpInput('');
+    } catch (err) {
+      setOtpError(err instanceof Error ? err.message : 'Failed to verify completion OTP');
+    } finally {
+      setOtpActionLoading(null);
     }
   };
 
@@ -285,6 +417,8 @@ const Activity: React.FC = () => {
     switch (status) {
       case 'COMPLETED':
         return 'bg-green-100 text-green-700';
+      case 'ACCEPTED':
+        return 'bg-violet-100 text-violet-700';
       case 'ACTIVE':
         return 'bg-blue-100 text-blue-700';
       case 'PENDING':
@@ -368,6 +502,7 @@ const Activity: React.FC = () => {
             >
               <option value="All">All Statuses</option>
               <option value="PENDING">Pending</option>
+              <option value="ACCEPTED">Accepted</option>
               <option value="ACTIVE">Active</option>
               <option value="COMPLETED">Completed</option>
             </select>
@@ -473,7 +608,7 @@ const Activity: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm"
+              className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto p-4 bg-black/20 backdrop-blur-sm"
               onClick={() => setSelectedExchange(null)}
             >
               <motion.div
@@ -481,7 +616,7 @@ const Activity: React.FC = () => {
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.95, opacity: 0, y: 20 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden"
+                className="my-auto flex max-h-[calc(100vh-2rem)] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
               >
                 <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
                   <h3 className="text-lg font-bold text-gray-900">Exchange Details</h3>
@@ -492,7 +627,7 @@ const Activity: React.FC = () => {
                     <X className="w-5 h-5 text-gray-500" />
                   </button>
                 </div>
-                <div className="p-6 space-y-6">
+                <div className="overflow-y-auto p-6 space-y-6">
                   {(() => {
                     const counterparty =
                       selectedExchange.userRole === 'provider'
@@ -532,6 +667,22 @@ const Activity: React.FC = () => {
                               {formatDate(selectedExchange.createdAt)}
                             </span>
                           </div>
+                          {selectedExchange.startedAt && (
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-500">Started</span>
+                              <span className="font-medium text-gray-900">
+                                {formatDate(selectedExchange.startedAt)}
+                              </span>
+                            </div>
+                          )}
+                          {selectedExchange.completedAt && (
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-500">Completed</span>
+                              <span className="font-medium text-gray-900">
+                                {formatDate(selectedExchange.completedAt)}
+                              </span>
+                            </div>
+                          )}
                           <div className="flex justify-between text-sm">
                             <span className="text-gray-500">Your Role</span>
                             <span
@@ -551,11 +702,33 @@ const Activity: React.FC = () => {
                           </div>
                         </div>
 
+                        {otpNotice && (
+                          <div className="rounded-xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm text-brand-700">
+                            {otpNotice}
+                          </div>
+                        )}
+
+                        {otpError && (
+                          <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+                            {otpError}
+                          </div>
+                        )}
+
+                        {(selectedExchange.status === 'ACCEPTED' ||
+                          selectedExchange.status === 'ACTIVE' ||
+                          selectedExchange.status === 'COMPLETED') &&
+                          otpLoading && (
+                            <div className="flex items-center justify-center rounded-xl bg-gray-50 px-4 py-6 text-sm text-gray-500">
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Loading OTP verification status...
+                            </div>
+                          )}
+
                         {/* Action buttons based on status and role */}
-                        <div className="flex gap-3 pt-2">
+                        <div className="pt-2">
                           {selectedExchange.status === 'PENDING' &&
                             selectedExchange.userRole === 'provider' && (
-                              <>
+                              <div className="flex gap-3">
                                 <Button
                                   onClick={() => handleAccept(selectedExchange.id)}
                                   disabled={actionLoading === selectedExchange.id}
@@ -577,7 +750,7 @@ const Activity: React.FC = () => {
                                   <X className="w-4 h-4 mr-2" />
                                   Reject
                                 </Button>
-                              </>
+                              </div>
                             )}
 
                           {selectedExchange.status === 'PENDING' &&
@@ -594,7 +767,97 @@ const Activity: React.FC = () => {
                               </Button>
                             )}
 
-                          {selectedExchange.status === 'ACTIVE' && (
+                          {selectedExchange.status === 'ACCEPTED' && otpStatus && !otpLoading && (
+                            <div className="space-y-4">
+                              <ExchangeOtpPhaseCard
+                                title="Service start verification"
+                                description={
+                                  selectedExchange.userRole === 'provider'
+                                    ? 'You control the start OTP. Share it with the receiver so they can confirm both of you are present.'
+                                    : 'Ask the provider for the start OTP, then enter it here to begin the service.'
+                                }
+                                phaseStatus={otpStatus.start}
+                                revealedOtp={revealedOtps.start}
+                                sharePrompt="Share this OTP with the receiver"
+                                verifyPrompt="Enter OTP shared by the provider"
+                                verifyValue={startOtpInput}
+                                onVerifyValueChange={setStartOtpInput}
+                                onGenerate={() => handleGenerateStartOtp(selectedExchange.id)}
+                                onVerify={() => handleVerifyStartOtp(selectedExchange.id)}
+                                onCopyOtp={() => handleCopyOtp(revealedOtps.start)}
+                                generateLabel="Generate start OTP"
+                                verifyLabel="Verify start OTP"
+                                isGenerating={otpActionLoading === 'start-generate'}
+                                isVerifying={otpActionLoading === 'start-verify'}
+                                waitingMessage={
+                                  selectedExchange.userRole === 'requester' &&
+                                  otpStatus.start.status === 'not_started'
+                                    ? 'Waiting for the provider to generate the start OTP.'
+                                    : undefined
+                                }
+                              />
+                            </div>
+                          )}
+
+                          {selectedExchange.status === 'ACTIVE' && otpStatus && !otpLoading && (
+                            <div className="space-y-4">
+                              <ExchangeOtpPhaseCard
+                                title="Service start verification"
+                                description="This phase is complete. The receiver verified the provider's start OTP before the work began."
+                                phaseStatus={otpStatus.start}
+                                revealedOtp={null}
+                                sharePrompt="Share this OTP with the receiver"
+                                verifyPrompt="Enter OTP shared by the provider"
+                                verifyValue=""
+                                onVerifyValueChange={() => undefined}
+                                onGenerate={() => undefined}
+                                onVerify={() => undefined}
+                                onCopyOtp={() => undefined}
+                                generateLabel="Regenerate start OTP"
+                                verifyLabel="Verify start OTP"
+                                isGenerating={false}
+                                isVerifying={false}
+                                lockedMessage="Start verification is already complete. This phase is now locked."
+                              />
+
+                              <ExchangeOtpPhaseCard
+                                title="Service completion verification"
+                                description={
+                                  selectedExchange.userRole === 'requester'
+                                    ? 'When you are satisfied the work is done, generate the completion OTP and share it with the provider.'
+                                    : 'When the work is done, ask the receiver for the completion OTP and enter it here to finish the exchange.'
+                                }
+                                phaseStatus={otpStatus.completion}
+                                revealedOtp={revealedOtps.completion}
+                                sharePrompt="Share this OTP with the provider"
+                                verifyPrompt="Enter OTP shared by the receiver"
+                                verifyValue={completionOtpInput}
+                                onVerifyValueChange={setCompletionOtpInput}
+                                onGenerate={() => handleGenerateCompletionOtp(selectedExchange.id)}
+                                onVerify={() => handleVerifyCompletionOtp(selectedExchange.id)}
+                                onCopyOtp={() => handleCopyOtp(revealedOtps.completion)}
+                                generateLabel="Generate completion OTP"
+                                verifyLabel="Verify completion OTP"
+                                isGenerating={otpActionLoading === 'completion-generate'}
+                                isVerifying={otpActionLoading === 'completion-verify'}
+                                lockedMessage={
+                                  selectedExchange.userRole === 'provider' &&
+                                  otpStatus.completion.status === 'not_started'
+                                    ? 'The receiver will generate the completion OTP when they are ready to confirm the work was completed.'
+                                    : undefined
+                                }
+                                waitingMessage={
+                                  selectedExchange.userRole === 'provider' &&
+                                  otpStatus.completion.status === 'pending' &&
+                                  !otpStatus.completion.canVerify
+                                    ? 'Waiting for the receiver to share the completion OTP.'
+                                    : undefined
+                                }
+                              />
+                            </div>
+                          )}
+
+                          {selectedExchange.status === 'ACTIVE' && false && (
                             <div className="space-y-4">
                               {/* Confirmation Status */}
                               <div className="bg-gray-50 rounded-xl p-4 space-y-2">
@@ -623,7 +886,7 @@ const Activity: React.FC = () => {
                               {selectedExchange.userRole === 'provider' &&
                                 !selectedExchange.providerConfirmed && (
                                   <Button
-                                    onClick={() => handleConfirm(selectedExchange)}
+                                    onClick={() => undefined}
                                     disabled={actionLoading === selectedExchange.id}
                                     fullWidth
                                     className="shadow-lg shadow-brand-500/20"
@@ -652,7 +915,7 @@ const Activity: React.FC = () => {
                               {selectedExchange.userRole === 'requester' &&
                                 !selectedExchange.requesterConfirmed && (
                                   <Button
-                                    onClick={() => handleConfirm(selectedExchange)}
+                                    onClick={() => undefined}
                                     disabled={actionLoading === selectedExchange.id}
                                     fullWidth
                                     className="shadow-lg shadow-brand-500/20"
@@ -683,7 +946,7 @@ const Activity: React.FC = () => {
                             <div className="space-y-4">
                               <div className="w-full text-center p-4 bg-green-50 rounded-xl">
                                 <p className="text-green-700 font-medium">
-                                  ✓ Both parties confirmed. Exchange completed!
+                                  ✓ Completion OTPs verified. Exchange completed!
                                 </p>
                               </div>
 

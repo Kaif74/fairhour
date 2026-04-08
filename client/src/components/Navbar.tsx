@@ -74,18 +74,18 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout }) => {
             </Link>
             {!isAuthenticated && (
               <div className="hidden sm:ml-10 sm:flex sm:space-x-8">
-                <Link to="/core-section" className={linkClass}>
+                <a href="/#how-it-works" className={linkClass}>
                   How it works
-                </Link>
+                </a>
                 <Link to="/browse" className={linkClass}>
-                  Browse Services
+                  Find Help
                 </Link>
                 <Link to="/requests" className={linkClass}>
-                  Browse Requests
+                  Help Requests
                 </Link>
-                <Link to="/" className={linkClass}>
-                  Community
-                </Link>
+                <a href="/#trust" className={linkClass}>
+                  Trust & Safety
+                </a>
               </div>
             )}
           </div>
@@ -94,7 +94,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout }) => {
             {isAuthenticated ? (
               <>
                 <Link to="/dashboard" className={linkClass}>
-                  Dashboard
+                  Home
                 </Link>
                 <Link to="/profile" className={linkClass}>
                   Profile
@@ -147,24 +147,30 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout }) => {
             <div className="pt-2 pb-3 space-y-1 px-4">
               {!isAuthenticated && (
                 <>
-                  <Link
-                    to="/"
+                  <a
+                    href="/#how-it-works"
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50"
                   >
                     How it works
-                  </Link>
+                  </a>
                   <Link
                     to="/browse"
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50"
                   >
-                    Browse Services
+                    Find Help
                   </Link>
                   <Link
                     to="/requests"
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50"
                   >
-                    Browse Requests
+                    Help Requests
                   </Link>
+                  <a
+                    href="/#trust"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50"
+                  >
+                    Trust & Safety
+                  </a>
                 </>
               )}
               {isAuthenticated ? (
@@ -173,7 +179,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout }) => {
                     to="/dashboard"
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50"
                   >
-                    Dashboard
+                    Home
                   </Link>
                   <Link
                     to="/profile"

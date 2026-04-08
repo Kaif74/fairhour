@@ -24,6 +24,7 @@ enum RequestStatus {
 
 enum ExchangeStatus {
   PENDING
+  ACCEPTED
   ACTIVE
   COMPLETED
 }
@@ -31,6 +32,42 @@ enum ExchangeStatus {
 enum ConversationStatus {
   ACTIVE
   LOCKED
+}
+
+enum DeclaredExperienceLevel {
+  BEGINNER @map("beginner")
+  INTERMEDIATE @map("intermediate")
+  EXPERT @map("expert")
+}
+
+enum SkillProofType {
+  CERTIFICATE @map("certificate")
+  PORTFOLIO   @map("portfolio")
+  LINK        @map("link")
+  IMAGE       @map("image")
+}
+
+enum ProofVoteType {
+  VALID      @map("valid")
+  IRRELEVANT @map("irrelevant")
+  FAKE       @map("fake")
+}
+
+enum CredibilityEventType {
+  JOB_COMPLETED @map("job_completed")
+  REVIEW_ADDED  @map("review_added")
+  DISPUTE       @map("dispute")
+  PROOF_ADDED   @map("proof_added")
+}
+
+enum OtpPhase {
+  START      @map("start")
+  COMPLETION @map("completion")
+}
+
+enum OtpGeneratedFor {
+  PROVIDER @map("provider")
+  RECEIVER @map("receiver")
 }
 
 // ============================================================================
@@ -64,6 +101,10 @@ model User {
   messages             Message[]
   reviewsGiven         Review[]   @relation("ReviewsGiven")
   reviewsReceived      Review[]   @relation("ReviewsReceived")
+  skillExperiences     UserSkillExperience[]
+  skillProofs          UserSkillProof[]
+  proofVotes           ProofVote[]
+  credibilityEvents    CredibilityEvent[]
 
   @@index([email])
 }
@@ -124,6 +165,7 @@ model Exchange {
   providerConfirmed   Boolean        @default(false)  // Provider marks service as delivered
   requesterConfirmed  Boolean        @default(false)  // Requester confirms service received
   createdAt           DateTime       @default(now())
+  startedAt           DateTime?
   completedAt         DateTime?
 
   // Relations
@@ -132,6 +174,7 @@ model Exchange {
   service      Service?      @relation(fields: [serviceId], references: [id], onDelete: SetNull)
   conversation Conversation?
   reviews      Review[]
+  otpSessions  ServiceOtp[]
 
   @@index([providerId])
   @@index([requesterId])
@@ -193,8 +236,11 @@ model Occupation {
   createdAt      DateTime @default(now())
 
   // Relations
-  services     Service[]
-  serviceStats ServiceStats?
+  services          Service[]
+  serviceStats      ServiceStats?
+  skillExperiences  UserSkillExperience[]
+  skillProofs       UserSkillProof[]
+  credibilityEvents CredibilityEvent[]
 
   @@index([majorGroup])
   @@index([skillLevel])
@@ -231,4 +277,101 @@ model Review {
   @@unique([exchangeId, reviewerId]) // One review per person per exchange
   @@index([providerId])
   @@index([reviewerId])
+}
+
+model UserSkillExperience {
+  id              String                  @id @default(uuid())
+  userId          String                  @map("user_id")
+  occupationId    String                  @map("occupation_id")
+  declaredLevel   DeclaredExperienceLevel @default(BEGINNER) @map("declared_level")
+  experienceScore Float                   @default(0) @map("experience_score")
+  jobsCompleted   Int                     @default(0) @map("jobs_completed")
+  avgRating       Float                   @default(0) @map("avg_rating")
+  repeatClients   Int                     @default(0) @map("repeat_clients")
+  disputeCount    Int                     @default(0) @map("dispute_count")
+  lastUpdated     DateTime                @updatedAt @map("last_updated")
+  createdAt       DateTime                @default(now()) @map("created_at")
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  occupation Occupation @relation(fields: [occupationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, occupationId])
+  @@index([userId])
+  @@index([occupationId])
+  @@map("user_skill_experience")
+}
+
+model UserSkillProof {
+  id           String         @id @default(uuid())
+  userId       String         @map("user_id")
+  occupationId String         @map("occupation_id")
+  proofType    SkillProofType @map("proof_type")
+  proofUrl     String         @map("proof_url")
+  description  String?
+  isVerified   Boolean        @default(false) @map("is_verified")
+  createdAt    DateTime       @default(now()) @map("created_at")
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  occupation Occupation @relation(fields: [occupationId], references: [id], onDelete: Cascade)
+  votes      ProofVote[]
+
+  @@index([userId])
+  @@index([occupationId])
+  @@index([isVerified])
+  @@map("user_skill_proofs")
+}
+
+model ProofVote {
+  id        String        @id @default(uuid())
+  proofId   String        @map("proof_id")
+  voterId   String        @map("voter_id")
+  voteType  ProofVoteType @map("vote_type")
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  proof  UserSkillProof @relation(fields: [proofId], references: [id], onDelete: Cascade)
+  voter  User           @relation(fields: [voterId], references: [id], onDelete: Cascade)
+
+  @@unique([proofId, voterId])
+  @@index([proofId])
+  @@index([voterId])
+  @@map("proof_votes")
+}
+
+model CredibilityEvent {
+  id           String               @id @default(uuid())
+  userId       String               @map("user_id")
+  occupationId String               @map("occupation_id")
+  eventType    CredibilityEventType @map("event_type")
+  metadata     Json
+  createdAt    DateTime             @default(now()) @map("created_at")
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  occupation Occupation @relation(fields: [occupationId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([occupationId])
+  @@index([eventType])
+  @@map("credibility_events")
+}
+
+model ServiceOtp {
+  id               String          @id @default(uuid())
+  exchangeId       String          @map("service_id")
+  phase            OtpPhase
+  otpHash          String          @map("otp_hash")
+  generatedFor     OtpGeneratedFor @map("generated_for")
+  verified         Boolean         @default(false)
+  verifiedAt       DateTime?       @map("verified_at")
+  failedAttempts   Int             @default(0) @map("failed_attempts")
+  failedAttemptLog Json?           @map("failed_attempt_log")
+  invalidatedAt    DateTime?       @map("invalidated_at")
+  expiresAt        DateTime        @map("expires_at")
+  createdAt        DateTime        @default(now()) @map("created_at")
+
+  exchange Exchange @relation(fields: [exchangeId], references: [id], onDelete: Cascade)
+
+  @@index([exchangeId, phase])
+  @@index([expiresAt])
+  @@index([invalidatedAt])
+  @@map("service_otps")
 }

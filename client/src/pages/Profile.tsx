@@ -18,9 +18,24 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
 import { getTimeBalance } from '../api/auth';
 import { getMyServices, Service } from '../api/dashboard';
+import {
+  getUserCredibility,
+  getUserOccupationCredibility,
+  updateDeclaredExperience,
+  uploadProof,
+} from '../api/credibility';
 import Button from '../components/Button';
+import CredibilityBreakdownPanel from '../components/CredibilityBreakdownPanel';
+import CredibilityCard from '../components/CredibilityCard';
+import CredibilityEventList from '../components/CredibilityEventList';
+import CredibilityPills from '../components/CredibilityPills';
+import CredibilityProofList from '../components/CredibilityProofList';
 import Input from '../components/Input';
 import PageTransition from '../components/PageTransition';
+import {
+  ApiOccupationCredibilitySummary,
+  ApiUserOccupationCredibility,
+} from '../types';
 
 // Default avatars
 const DEFAULT_AVATARS = [
@@ -367,19 +382,38 @@ const EditProfileModal: React.FC<{
 
 const Profile: React.FC = () => {
   const { user, updateProfile } = useAuth();
-  const [activeTab, setActiveTab] = useState<'About' | 'Skills' | 'Reviews'>('About');
+  const [activeTab, setActiveTab] = useState<'About' | 'Skills' | 'Credibility' | 'Reviews'>('About');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [balance, setBalance] = useState({ balance: 0, hoursEarned: 0, hoursSpent: 0 });
   const [services, setServices] = useState<Service[]>([]);
+  const [credibilitySkills, setCredibilitySkills] = useState<ApiOccupationCredibilitySummary[]>([]);
+  const [credibilityDetail, setCredibilityDetail] = useState<ApiUserOccupationCredibility | null>(null);
+  const [isCredibilityLoading, setIsCredibilityLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedCredibilityOccupationId, setSelectedCredibilityOccupationId] = useState('');
+  const [selectedProofOccupationId, setSelectedProofOccupationId] = useState('');
+  const [selectedDeclaredLevel, setSelectedDeclaredLevel] = useState<'beginner' | 'intermediate' | 'expert'>('intermediate');
+  const [selectedProofType, setSelectedProofType] = useState<'certificate' | 'portfolio' | 'link' | 'image'>('link');
+  const [proofUrl, setProofUrl] = useState('');
+  const [proofDescription, setProofDescription] = useState('');
+  const [isSubmittingProof, setIsSubmittingProof] = useState(false);
+  const [isSavingDeclaredLevel, setIsSavingDeclaredLevel] = useState(false);
+  const [proofStatus, setProofStatus] = useState<string | null>(null);
+  const [proofError, setProofError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!user?.id) return;
       setIsLoading(true);
       try {
-        const [balanceData, servicesData] = await Promise.all([getTimeBalance(), getMyServices()]);
+        const [balanceData, servicesData, credibilityData] = await Promise.all([
+          getTimeBalance(),
+          getMyServices(),
+          getUserCredibility(user.id),
+        ]);
         setBalance(balanceData);
         setServices(servicesData);
+        setCredibilitySkills(credibilityData);
       } catch (error) {
         console.error('Failed to fetch profile data:', error);
       } finally {
@@ -388,7 +422,7 @@ const Profile: React.FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, [user?.id]);
 
   const handleSaveProfile = async (data: {
     name: string;
@@ -401,10 +435,128 @@ const Profile: React.FC = () => {
     await updateProfile(data);
   };
 
+  const handleProofSubmit = async () => {
+    if (!selectedProofOccupationId || !proofUrl.trim()) {
+      setProofError('Choose a skill and provide a public proof URL.');
+      return;
+    }
+
+    try {
+      setIsSubmittingProof(true);
+      setProofError(null);
+      setProofStatus(null);
+
+      await uploadProof({
+        occupationId: selectedProofOccupationId,
+        proofType: selectedProofType,
+        proofUrl: proofUrl.trim(),
+        description: proofDescription.trim() || undefined,
+        declaredLevel: selectedDeclaredLevel,
+      });
+
+      if (user?.id) {
+        const updatedCredibility = await getUserCredibility(user.id);
+        setCredibilitySkills(updatedCredibility);
+        const detail = await getUserOccupationCredibility(user.id, selectedProofOccupationId);
+        setCredibilityDetail(detail);
+      }
+
+      setProofUrl('');
+      setProofDescription('');
+      setProofStatus('Proof submitted. Community verification will update your score as votes come in.');
+    } catch (error) {
+      setProofError(error instanceof Error ? error.message : 'Failed to submit proof');
+    } finally {
+      setIsSubmittingProof(false);
+    }
+  };
+
+  const handleDeclaredLevelSave = async () => {
+    if (!selectedCredibilityOccupationId) return;
+
+    try {
+      setIsSavingDeclaredLevel(true);
+      setProofError(null);
+      setProofStatus(null);
+
+      const updated = await updateDeclaredExperience(
+        selectedCredibilityOccupationId,
+        selectedDeclaredLevel
+      );
+
+      if (updated) {
+        setCredibilityDetail(updated);
+      }
+
+      if (user?.id) {
+        const updatedCredibility = await getUserCredibility(user.id);
+        setCredibilitySkills(updatedCredibility);
+      }
+
+      setProofStatus('Declared experience level updated successfully.');
+    } catch (error) {
+      setProofError(error instanceof Error ? error.message : 'Failed to update declared level');
+    } finally {
+      setIsSavingDeclaredLevel(false);
+    }
+  };
+
+  useEffect(() => {
+    const firstOccupation =
+      credibilitySkills[0]?.occupationId ||
+      services.find((service) => service.occupationId && service.occupation?.title)?.occupationId ||
+      '';
+
+    if (!selectedProofOccupationId && firstOccupation) {
+      setSelectedProofOccupationId(firstOccupation);
+    }
+
+    if (!selectedCredibilityOccupationId && firstOccupation) {
+      setSelectedCredibilityOccupationId(firstOccupation);
+    }
+  }, [services, credibilitySkills, selectedProofOccupationId, selectedCredibilityOccupationId]);
+
+  useEffect(() => {
+    const fetchCredibilityDetail = async () => {
+      if (!user?.id || !selectedCredibilityOccupationId) {
+        setCredibilityDetail(null);
+        return;
+      }
+
+      setIsCredibilityLoading(true);
+      try {
+        const detail = await getUserOccupationCredibility(user.id, selectedCredibilityOccupationId);
+        setCredibilityDetail(detail);
+
+        if (detail) {
+          setSelectedDeclaredLevel(detail.declaredLevel);
+        }
+      } finally {
+        setIsCredibilityLoading(false);
+      }
+    };
+
+    fetchCredibilityDetail();
+  }, [user?.id, selectedCredibilityOccupationId]);
+
   if (!user) return <div className="p-8 text-center">Please log in.</div>;
 
   // Safe avatar URL - never broken
   const avatarUrl = user.profileImageUrl || DEFAULT_AVATARS[0];
+  const proofOccupations = services.reduce<Array<{ id: string; title: string }>>((acc, service) => {
+    if (
+      service.occupationId &&
+      service.occupation?.title &&
+      !acc.some((occupation) => occupation.id === service.occupationId)
+    ) {
+      acc.push({
+        id: service.occupationId,
+        title: service.occupation.title,
+      });
+    }
+
+    return acc;
+  }, []);
 
   return (
     <PageTransition>
@@ -583,7 +735,7 @@ const Profile: React.FC = () => {
               <div className="bg-white rounded-2xl shadow-soft border border-gray-100 min-h-[500px] overflow-hidden">
                 <div className="border-b border-gray-100 px-2">
                   <nav className="flex space-x-2 p-2">
-                    {['About', 'Skills', 'Reviews'].map((tab) => (
+                    {['About', 'Skills', 'Credibility', 'Reviews'].map((tab) => (
                       <button
                         key={tab}
                         onClick={() => setActiveTab(tab as any)}
@@ -614,7 +766,7 @@ const Profile: React.FC = () => {
                       </div>
                     )}
                     {activeTab === 'Skills' && (
-                      <div>
+                      <div className="space-y-10">
                         <h3 className="text-lg font-bold text-gray-900 mb-4">My Skills</h3>
                         <div className="flex flex-wrap gap-2 mb-10">
                           {user.skills && user.skills.length > 0 ? (
@@ -630,6 +782,7 @@ const Profile: React.FC = () => {
                             <p className="text-gray-500">No skills added yet</p>
                           )}
                         </div>
+
                         <h3 className="text-lg font-bold text-gray-900 mb-4">Services I Offer</h3>
                         <div className="space-y-4">
                           {services.length > 0 ? (
@@ -655,10 +808,202 @@ const Profile: React.FC = () => {
                             ))
                           ) : (
                             <p className="text-gray-500">
-                              No services yet. Go to My Services to add one!
+                              No services yet. Go to Services I Offer to add one!
                             </p>
                           )}
                         </div>
+                      </div>
+                    )}
+                    {activeTab === 'Credibility' && (
+                      <div className="space-y-8">
+                        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                          <div>
+                            <h3 className="text-lg font-bold text-gray-900">Credibility Center</h3>
+                            <p className="mt-1 text-sm text-gray-500">
+                              Manage declared experience, proofs, verification status, and the transparency breakdown for each skill.
+                            </p>
+                          </div>
+                          <div className="w-full md:w-72">
+                            <select
+                              value={selectedCredibilityOccupationId}
+                              onChange={(e) => {
+                                setSelectedCredibilityOccupationId(e.target.value);
+                                setSelectedProofOccupationId(e.target.value);
+                              }}
+                              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                            >
+                              <option value="">Choose a service skill</option>
+                              {proofOccupations.map((occupation) => (
+                                <option key={occupation.id} value={occupation.id}>
+                                  {occupation.title}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        {credibilitySkills.length > 0 && (
+                          <div className="grid gap-4 md:grid-cols-2">
+                            {credibilitySkills.map((credibility) => (
+                              <button
+                                key={credibility.occupationId}
+                                onClick={() => {
+                                  setSelectedCredibilityOccupationId(credibility.occupationId);
+                                  setSelectedProofOccupationId(credibility.occupationId);
+                                }}
+                                className={`rounded-2xl border p-4 text-left transition-all ${
+                                  selectedCredibilityOccupationId === credibility.occupationId
+                                    ? 'border-brand-300 bg-brand-50 shadow-soft'
+                                    : 'border-gray-200 bg-white hover:border-brand-200 hover:shadow-soft'
+                                }`}
+                              >
+                                <p className="text-sm font-semibold text-gray-900">
+                                  {credibility.occupationTitle}
+                                </p>
+                                <p className="mt-1 text-sm text-gray-500">
+                                  Score {credibility.credibilityScore}/100
+                                </p>
+                                <div className="mt-3">
+                                  <CredibilityPills
+                                    declaredLevel={credibility.declaredLevel}
+                                    badge={credibility.badge}
+                                    compact
+                                  />
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
+                        {proofError && (
+                          <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+                            {proofError}
+                          </div>
+                        )}
+
+                        {proofStatus && (
+                          <div className="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                            {proofStatus}
+                          </div>
+                        )}
+
+                        {isCredibilityLoading ? (
+                          <div className="rounded-2xl border border-gray-200 bg-gray-50 px-5 py-10 text-center text-sm text-gray-500">
+                            Loading credibility details...
+                          </div>
+                        ) : credibilityDetail ? (
+                          <div className="space-y-6">
+                            <CredibilityCard credibility={credibilityDetail} />
+
+                            <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+                              <div className="space-y-6">
+                                <div className="rounded-2xl border border-gray-200 bg-gray-50/80 p-5">
+                                  <div className="flex flex-col gap-4 md:flex-row md:items-end">
+                                    <div className="flex-1">
+                                      <label className="mb-2 block text-sm font-medium text-gray-700">
+                                        Declared experience level
+                                      </label>
+                                      <select
+                                        value={selectedDeclaredLevel}
+                                        onChange={(e) =>
+                                          setSelectedDeclaredLevel(
+                                            e.target.value as 'beginner' | 'intermediate' | 'expert'
+                                          )
+                                        }
+                                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                                      >
+                                        <option value="beginner">Beginner</option>
+                                        <option value="intermediate">Intermediate</option>
+                                        <option value="expert">Expert</option>
+                                      </select>
+                                    </div>
+                                    <Button
+                                      onClick={handleDeclaredLevelSave}
+                                      disabled={isSavingDeclaredLevel || !selectedCredibilityOccupationId}
+                                    >
+                                      {isSavingDeclaredLevel ? 'Saving...' : 'Save Level'}
+                                    </Button>
+                                  </div>
+                                </div>
+
+                                <CredibilityBreakdownPanel breakdown={credibilityDetail.breakdown} />
+                                <CredibilityEventList events={credibilityDetail.recentEvents} />
+                              </div>
+
+                              <div className="space-y-6">
+                                <div className="rounded-2xl border border-gray-200 bg-gray-50/80 p-5">
+                                  <h3 className="text-lg font-bold text-gray-900">Add proof</h3>
+                                  <p className="mt-1 text-sm text-gray-500">
+                                    Submit certificates, portfolio links, or image evidence to strengthen trust for this skill.
+                                  </p>
+
+                                  <div className="mt-5 grid grid-cols-1 gap-4">
+                                    <div>
+                                      <label className="mb-2 block text-sm font-medium text-gray-700">Proof Type</label>
+                                      <select
+                                        value={selectedProofType}
+                                        onChange={(e) =>
+                                          setSelectedProofType(
+                                            e.target.value as 'certificate' | 'portfolio' | 'link' | 'image'
+                                          )
+                                        }
+                                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                                      >
+                                        <option value="link">Link</option>
+                                        <option value="portfolio">Portfolio</option>
+                                        <option value="certificate">Certificate</option>
+                                        <option value="image">Image</option>
+                                      </select>
+                                    </div>
+
+                                    <div>
+                                      <label className="mb-2 block text-sm font-medium text-gray-700">Proof URL</label>
+                                      <input
+                                        type="url"
+                                        value={proofUrl}
+                                        onChange={(e) => setProofUrl(e.target.value)}
+                                        placeholder="https://..."
+                                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                                      />
+                                    </div>
+
+                                    <div>
+                                      <label className="mb-2 block text-sm font-medium text-gray-700">Description</label>
+                                      <textarea
+                                        value={proofDescription}
+                                        onChange={(e) => setProofDescription(e.target.value)}
+                                        rows={4}
+                                        placeholder="Explain what this proof shows and why it supports your experience."
+                                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="mt-5 flex justify-end">
+                                    <Button
+                                      onClick={handleProofSubmit}
+                                      disabled={isSubmittingProof || proofOccupations.length === 0}
+                                    >
+                                      {isSubmittingProof ? 'Submitting...' : 'Submit Proof'}
+                                    </Button>
+                                  </div>
+                                </div>
+
+                                <div>
+                                  <h3 className="mb-4 text-lg font-bold text-gray-900">Proofs</h3>
+                                  <CredibilityProofList
+                                    proofs={credibilityDetail.proofs}
+                                    isOwner
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-5 py-10 text-center text-sm text-gray-500">
+                            Link an occupation to one of your services to unlock full credibility management.
+                          </div>
+                        )}
                       </div>
                     )}
                     {activeTab === 'Reviews' && (

@@ -8,6 +8,7 @@ import conversationRoutes from './conversation.routes';
 import occupationRoutes from './occupation.routes';
 import reviewRoutes from './review.routes';
 import valuationRoutes from './valuation.routes';
+import proofRoutes from './proof.routes';
 
 const router = Router();
 
@@ -30,5 +31,6 @@ router.use('/conversations', conversationRoutes);
 router.use('/occupations', occupationRoutes);
 router.use('/reviews', reviewRoutes);
 router.use('/valuation', valuationRoutes);
+router.use('/proofs', proofRoutes);
 
 export default router;

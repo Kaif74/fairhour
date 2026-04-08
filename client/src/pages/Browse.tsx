@@ -3,14 +3,25 @@ import { Link } from 'react-router-dom';
 import { Search, Star, Clock, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { CATEGORIES } from '../constants';
-import { ApiService, ApiServicesResponse, ServiceDisplay, apiServiceToDisplay } from '../types';
+import { getUserOccupationCredibility } from '../api/credibility';
+import CredibilityPills from '../components/CredibilityPills';
+import {
+  ApiServicesResponse,
+  ApiUserOccupationCredibility,
+  ServiceDisplay,
+  apiServiceToDisplay,
+} from '../types';
 import PageTransition from '../components/PageTransition';
 import api from '../api';
+
+interface ServiceDisplayWithCredibility extends ServiceDisplay {
+  credibility?: ApiUserOccupationCredibility | null;
+}
 
 const Browse: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [services, setServices] = useState<ServiceDisplay[]>([]);
+  const [services, setServices] = useState<ServiceDisplayWithCredibility[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const categoryScrollRef = useRef<HTMLDivElement>(null);
@@ -30,16 +41,36 @@ const Browse: React.FC = () => {
     const fetchServices = async () => {
       try {
         setLoading(true);
+        setError(null);
         const response = await api.get<ApiServicesResponse>('/api/services', { auth: false });
 
         if (response.success && response.data?.services) {
           // Transform API services to display format
           const displayServices = response.data.services.map(apiServiceToDisplay);
-          setServices(displayServices);
+          const servicesWithCredibility = await Promise.all(
+            displayServices.map(async (service) => {
+              if (!service.occupationId) {
+                return { ...service, credibility: null };
+              }
+
+              const credibility = await getUserOccupationCredibility(
+                service.providerId,
+                service.occupationId
+              );
+
+              return {
+                ...service,
+                credibility,
+              };
+            })
+          );
+
+          setServices(servicesWithCredibility);
         }
       } catch (err) {
         console.error('Failed to fetch services:', err);
         setError('Failed to load services from server');
+        setServices([]);
       } finally {
         setLoading(false);
       }
@@ -126,7 +157,45 @@ const Browse: React.FC = () => {
             layout
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
           >
-            {filteredServices.length > 0 ? (
+            {loading ? (
+              Array.from({ length: 8 }).map((_, index) => (
+                <div
+                  key={`service-skeleton-${index}`}
+                  className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-soft"
+                >
+                  <div className="animate-pulse p-6">
+                    <div className="mb-4 flex items-center">
+                      <div className="h-12 w-12 rounded-full bg-gray-200" />
+                      <div className="ml-3 flex-1">
+                        <div className="h-4 w-28 rounded bg-gray-200" />
+                        <div className="mt-2 h-3 w-20 rounded bg-gray-100" />
+                      </div>
+                    </div>
+
+                    <div className="mb-4 h-6 w-20 rounded-md bg-gray-100" />
+                    <div className="h-6 w-3/4 rounded bg-gray-200" />
+                    <div className="mt-3 h-4 w-full rounded bg-gray-100" />
+                    <div className="mt-2 h-4 w-5/6 rounded bg-gray-100" />
+                    <div className="mt-4 flex gap-2">
+                      <div className="h-8 w-24 rounded-full bg-brand-50" />
+                      <div className="h-8 w-20 rounded-full bg-sky-50" />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-gray-100 bg-gray-50/50 px-6 py-4">
+                    <div className="h-7 w-16 rounded-full bg-white shadow-sm" />
+                    <div className="h-4 w-20 rounded bg-gray-200" />
+                  </div>
+                </div>
+              ))
+            ) : error ? (
+              <div className="col-span-full flex flex-col items-center justify-center py-32 text-center">
+                <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mb-4">
+                  <Search className="w-8 h-8 text-red-300" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900">Couldn&apos;t load services</h3>
+                <p className="text-gray-500 mt-1">{error}</p>
+              </div>
+            ) : filteredServices.length > 0 ? (
               filteredServices.map((service) => (
                 <Link key={service.id} to={`/service/${service.id}`} className="block">
                   <motion.div
@@ -165,6 +234,17 @@ const Browse: React.FC = () => {
                         {service.title}
                       </h3>
                       <p className="text-gray-500 text-sm line-clamp-2">{service.description}</p>
+
+                      {service.credibility && (
+                        <div className="mt-3">
+                          <CredibilityPills
+                            declaredLevel={service.credibility.declaredLevel}
+                            badge={service.credibility.badge}
+                            credibilityScore={service.credibility.credibilityScore}
+                            compact
+                          />
+                        </div>
+                      )}
 
                       {/* Skill Level Badge */}
                       {service.skillLevel && service.skillLevel !== 'Intermediate' && (

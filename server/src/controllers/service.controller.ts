@@ -198,6 +198,27 @@ export async function getMyServices(
             where: {
                 userId: req.user.userId,
             },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        location: true,
+                        reputationScore: true,
+                        profileImageUrl: true,
+                    },
+                },
+                occupation: {
+                    select: {
+                        id: true,
+                        ncoCode: true,
+                        title: true,
+                        majorGroup: true,
+                        skillLevel: true,
+                        baseMultiplier: true,
+                    },
+                },
+            },
             orderBy: { createdAt: 'desc' },
         });
 

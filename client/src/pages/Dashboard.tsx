@@ -23,10 +23,17 @@ import {
 import { motion } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
 import { getTimeBalance } from '../api/auth';
+import { getUserOccupationCredibility } from '../api/credibility';
 import { getMyServices, getMyExchanges, Service, Exchange } from '../api/dashboard';
 import Button from '../components/Button';
+import CredibilityPills from '../components/CredibilityPills';
 import PageTransition from '../components/PageTransition';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ApiUserOccupationCredibility } from '../types';
+
+interface DashboardService extends Service {
+  credibility?: ApiUserOccupationCredibility | null;
+}
 
 interface StatCardProps {
   icon: React.ElementType;
@@ -95,13 +102,17 @@ const Dashboard: React.FC = () => {
 
   // State for dashboard data
   const [balance, setBalance] = useState({ balance: 0, hoursEarned: 0, hoursSpent: 0 });
-  const [services, setServices] = useState<Service[]>([]);
+  const [services, setServices] = useState<DashboardService[]>([]);
   const [exchanges, setExchanges] = useState<Exchange[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch dashboard data
   useEffect(() => {
     const fetchDashboardData = async () => {
+      if (!user) {
+        return;
+      }
+
       setIsLoading(true);
       try {
         const [balanceData, servicesData, exchangesData] = await Promise.all([
@@ -111,7 +122,18 @@ const Dashboard: React.FC = () => {
         ]);
 
         setBalance(balanceData);
-        setServices(servicesData);
+        const servicesWithCredibility = await Promise.all(
+          servicesData.map(async (service) => {
+            if (!service.occupationId || !user?.id) {
+              return { ...service, credibility: null };
+            }
+
+            const credibility = await getUserOccupationCredibility(user.id, service.occupationId);
+            return { ...service, credibility };
+          })
+        );
+
+        setServices(servicesWithCredibility);
         setExchanges(exchangesData);
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
@@ -121,7 +143,7 @@ const Dashboard: React.FC = () => {
     };
 
     fetchDashboardData();
-  }, []);
+  }, [user?.id]);
 
   if (!user) return null;
 
@@ -138,7 +160,9 @@ const Dashboard: React.FC = () => {
   };
 
   // Calculate active exchanges
-  const activeExchanges = exchanges.filter((e) => e.status === 'ACTIVE' || e.status === 'PENDING');
+  const activeExchanges = exchanges.filter(
+    (e) => e.status === 'PENDING' || e.status === 'ACCEPTED' || e.status === 'ACTIVE'
+  );
   const completedExchanges = exchanges.filter((e) => e.status === 'COMPLETED');
 
   // Time period state for chart
@@ -302,12 +326,12 @@ const Dashboard: React.FC = () => {
               </div>
               <nav className="space-y-2">
                 {[
-                  { name: 'Dashboard', icon: Briefcase, path: '/dashboard' },
-                  { name: 'My Services', icon: Zap, path: '/my-services' },
-                  { name: 'My Requests', icon: Clock, path: '/my-requests' },
+                  { name: 'Home', icon: Briefcase, path: '/dashboard' },
+                  { name: 'Services I Offer', icon: Zap, path: '/my-services' },
+                  { name: 'Help I Asked For', icon: Clock, path: '/my-requests' },
                   { name: 'Messages', icon: MessageSquare, path: '/messages' },
-                  { name: 'Browse Services', icon: Search, path: '/browse' },
-                  { name: 'Browse Requests', icon: HandHelping, path: '/requests' },
+                  { name: 'Find Help', icon: Search, path: '/browse' },
+                  { name: 'Help Requests', icon: HandHelping, path: '/requests' },
                 ].map((item) => (
                   <Link
                     key={item.name}
@@ -335,19 +359,19 @@ const Dashboard: React.FC = () => {
                 <h1 className="text-2xl font-bold text-gray-900">
                   Welcome back, {user.name.split(' ')[0]}!
                 </h1>
-                <p className="text-gray-500">Your community impact at a glance.</p>
+                <p className="text-gray-500">Everything happening in your FairHour account.</p>
               </div>
               <div className="flex gap-3">
                 <Link to="/my-services">
                   <Button size="sm" variant="secondary">
                     <Plus className="w-4 h-4 mr-2" />
-                    Offer Service
+                    Share a Skill
                   </Button>
                 </Link>
                 <Link to="/my-requests">
                   <Button size="sm">
                     <HandHelping className="w-4 h-4 mr-2" />
-                    Request Help
+                    Ask for Help
                   </Button>
                 </Link>
               </div>
@@ -441,7 +465,7 @@ const Dashboard: React.FC = () => {
 
               {/* Recent Activity */}
               <div className="bg-white p-6 rounded-2xl shadow-soft border border-gray-100">
-                <h3 className="font-bold text-gray-900 mb-6">Recent Exchanges</h3>
+                <h3 className="font-bold text-gray-900 mb-6">Recent Activity</h3>
                 {isLoading ? (
                   <div className="space-y-4">
                     {[1, 2, 3].map((i) => (
@@ -481,7 +505,9 @@ const Dashboard: React.FC = () => {
                               ? 'bg-green-100 text-green-700'
                               : exchange.status === 'PENDING'
                                 ? 'bg-yellow-100 text-yellow-700'
-                                : 'bg-blue-100 text-blue-700'
+                                : exchange.status === 'ACCEPTED'
+                                  ? 'bg-violet-100 text-violet-700'
+                                  : 'bg-blue-100 text-blue-700'
                           }`}
                         >
                           {exchange.status}
@@ -491,22 +517,22 @@ const Dashboard: React.FC = () => {
                   </div>
                 )}
                 <Link to="/activity">
-                  <Button variant="ghost" fullWidth className="mt-4 text-sm">
-                    View All Activity
+                    <Button variant="ghost" fullWidth className="mt-4 text-sm">
+                    See all activity
                   </Button>
                 </Link>
               </div>
             </div>
 
-            {/* My Services */}
+            {/* Services I Offer */}
             <div className="mb-8">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-gray-900">My Services</h3>
+                <h3 className="text-lg font-bold text-gray-900">Services I Offer</h3>
                 <Link
                   to="/my-services"
                   className="text-brand-600 text-sm font-semibold hover:underline flex items-center"
                 >
-                  Manage <ChevronRight className="w-4 h-4" />
+                  See all <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
 
@@ -526,8 +552,8 @@ const Dashboard: React.FC = () => {
               ) : services.length === 0 ? (
                 <div className="bg-white rounded-2xl shadow-soft border border-gray-100 p-8">
                   <EmptyState
-                    message="You haven't created any services yet."
-                    action={{ label: 'Create Service', to: '/my-services' }}
+                    message="You haven't shared any services yet."
+                    action={{ label: 'Add a Service', to: '/my-services' }}
                   />
                 </div>
               ) : (
@@ -542,6 +568,16 @@ const Dashboard: React.FC = () => {
                       <p className="text-sm text-gray-500 mb-4 line-clamp-2">
                         {service.description}
                       </p>
+                      {service.credibility && (
+                        <div className="mb-4">
+                          <CredibilityPills
+                            declaredLevel={service.credibility.declaredLevel}
+                            badge={service.credibility.badge}
+                            credibilityScore={service.credibility.credibilityScore}
+                            compact
+                          />
+                        </div>
+                      )}
                       <div className="flex items-center justify-between pt-4 border-t border-gray-50">
                         <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
                           {service.category}

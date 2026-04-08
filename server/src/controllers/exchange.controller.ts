@@ -1,13 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
+import { ExchangeStatus, OtpPhase } from '@prisma/client';
 import prisma from '../utils/prisma';
 import { AppError } from '../middlewares/errorHandler.middleware';
 import { CreateExchangeInput } from '../schemas/exchange.schema';
-import {
-  ensureConversationForExchange,
-  lockConversationForExchange,
-} from '../services/chat.service';
-import { skillValuationEngine } from '../services/valuation.service';
-import { blockchainService } from '../services/blockchain.service';
+import { ensureConversationForExchange } from '../services/chat.service';
+import { exchangeOtpService } from '../services/exchange-otp.service';
 
 /**
  * Request a service from a provider
@@ -233,7 +230,7 @@ export async function getMyExchanges(
 
     // Build where clause based on role
     type WhereClause = {
-      status?: 'PENDING' | 'ACTIVE' | 'COMPLETED';
+      status?: 'PENDING' | 'ACCEPTED' | 'ACTIVE' | 'COMPLETED';
       providerId?: string;
       requesterId?: string;
       OR?: Array<{ providerId?: string; requesterId?: string }>;
@@ -251,13 +248,20 @@ export async function getMyExchanges(
     }
 
     if (status && typeof status === 'string') {
-      where.status = status as 'PENDING' | 'ACTIVE' | 'COMPLETED';
+      where.status = status as 'PENDING' | 'ACCEPTED' | 'ACTIVE' | 'COMPLETED';
     }
 
     const [exchanges, total] = await Promise.all([
       prisma.exchange.findMany({
         where,
         include: {
+          service: {
+            select: {
+              id: true,
+              title: true,
+              category: true,
+            },
+          },
           reviews: {
             where: { reviewerId: userId },
             select: { id: true },
@@ -317,6 +321,21 @@ export async function getMyExchanges(
  * Exchange only completes when both confirm
  */
 export async function confirmExchange(
+  _req: Request<{ id: string }>,
+  _res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    throw new AppError(
+      'Manual completion is no longer available. Use the OTP verification flow instead.',
+      410
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getOtpStatus(
   req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
@@ -326,179 +345,125 @@ export async function confirmExchange(
       throw new AppError('User not authenticated', 401);
     }
 
-    const { id } = req.params;
-    const userId = req.user.userId;
-
-    // Check if exchange exists
-    const existingExchange = await prisma.exchange.findUnique({
-      where: { id },
-      include: {
-        provider: { select: { id: true, name: true, walletAddress: true } },
-        requester: { select: { id: true, name: true, walletAddress: true } },
-      },
-    });
-
-    if (!existingExchange) {
-      throw new AppError('Exchange not found', 404);
-    }
-
-    const isProvider = existingExchange.providerId === userId;
-    const isRequester = existingExchange.requesterId === userId;
-
-    if (!isProvider && !isRequester) {
-      throw new AppError('Not authorized to confirm this exchange', 403);
-    }
-
-    // Can only confirm ACTIVE exchanges
-    if (existingExchange.status !== 'ACTIVE') {
-      throw new AppError(
-        `Cannot confirm exchange with status: ${existingExchange.status}. Exchange must be ACTIVE.`,
-        400
-      );
-    }
-
-    // Check if already confirmed by this party
-    if (isProvider && existingExchange.providerConfirmed) {
-      throw new AppError('You have already confirmed this exchange', 400);
-    }
-    if (isRequester && existingExchange.requesterConfirmed) {
-      throw new AppError('You have already confirmed this exchange', 400);
-    }
-
-    // Update confirmation status
-    const updateData: {
-      providerConfirmed?: boolean;
-      requesterConfirmed?: boolean;
-      status?: 'COMPLETED';
-      completedAt?: Date;
-    } = {};
-
-    if (isProvider) {
-      updateData.providerConfirmed = true;
-    } else {
-      updateData.requesterConfirmed = true;
-    }
-
-    // Check if both parties will have confirmed after this update
-    const willProviderBeConfirmed = isProvider ? true : existingExchange.providerConfirmed;
-    const willRequesterBeConfirmed = isRequester ? true : existingExchange.requesterConfirmed;
-
-    if (willProviderBeConfirmed && willRequesterBeConfirmed) {
-      // Both confirmed - complete the exchange
-      updateData.status = 'COMPLETED';
-      updateData.completedAt = new Date();
-
-      // Calculate credits using SkillValuationEngine
-      try {
-        // Get the occupation from the service (if linked)
-        let occupationId: string | null = null;
-        if (existingExchange.serviceId) {
-          const service = await prisma.service.findUnique({
-            where: { id: existingExchange.serviceId },
-            select: { occupationId: true },
-          });
-          occupationId = service?.occupationId || null;
-        }
-
-        const valuation = await skillValuationEngine.calculateCredits({
-          hours: existingExchange.hours,
-          occupationId,
-          providerId: existingExchange.providerId,
-        });
-
-        (updateData as any).creditsEarned = valuation.creditsEarned;
-        (updateData as any).occupationCode = valuation.occupationCode;
-        (updateData as any).valuationDetails = {
-          skillMultiplier: valuation.skillMultiplier,
-          reputationFactor: valuation.reputationFactor,
-          demandFactor: valuation.demandFactor,
-          totalMultiplier: valuation.totalMultiplier,
-          occupationTitle: valuation.occupationTitle,
-          skillLevel: valuation.skillLevel,
-        };
-      } catch (valuationError) {
-        // Fallback: credits = hours (1:1) if valuation fails
-        console.error('Valuation error, falling back to 1:1:', valuationError);
-        (updateData as any).creditsEarned = existingExchange.hours;
-      }
-    }
-
-    const exchange = await prisma.exchange.update({
-      where: { id },
-      data: updateData,
-      include: {
-        provider: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        requester: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
-
-    // If completed, trigger the blockchain transaction
-    if (exchange.status === 'COMPLETED') {
-      const providerWallet = existingExchange.provider.walletAddress;
-      const requesterWallet = existingExchange.requester.walletAddress;
-
-      if (providerWallet && requesterWallet) {
-        try {
-          const txHash = await blockchainService.recordServiceTransaction({
-            providerWallet,
-            receiverWallet: requesterWallet,
-            hours: exchange.hours,
-            credits: exchange.creditsEarned || exchange.hours,
-            occupationCode: exchange.occupationCode || 'default',
-          });
-
-          if (txHash) {
-            // Save the hash to the exchange record
-            await prisma.exchange.update({
-              where: { id: exchange.id },
-              data: { blockchainTxHash: txHash },
-            });
-            (exchange as any).blockchainTxHash = txHash;
-          }
-        } catch (bcError) {
-          console.error('Blockchain logging failed but keeping internal tx completed:', bcError);
-          // Do not fail the internal request if the blockchain simply timed out or failed
-        }
-      } else {
-        console.log('Skipping blockchain tx: one or both users lack a walletAddress');
-      }
-    }
-
-    // Determine response message
-    let message: string;
-    if (exchange.status === 'COMPLETED') {
-      const creditInfo = exchange.creditsEarned
-        ? ` Provider earned ${exchange.creditsEarned} credits for ${exchange.hours} hour(s).`
-        : '';
-      message = `Both parties confirmed. Exchange completed successfully!${creditInfo}`;
-    } else if (isProvider) {
-      message = 'You confirmed service delivery. Waiting for requester to confirm receipt.';
-    } else {
-      message = 'You confirmed service received. Waiting for provider to confirm delivery.';
-    }
-
-    if (exchange.status === 'COMPLETED') {
-      await lockConversationForExchange(exchange.id);
-    }
+    const status = await exchangeOtpService.getOtpStatus(req.params.id, req.user.userId);
 
     res.json({
       success: true,
-      message,
-      data: {
-        ...exchange,
-        providerConfirmed: exchange.providerConfirmed,
-        requesterConfirmed: exchange.requesterConfirmed,
-      },
+      data: status,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function generateStartOtp(
+  req: Request<{ id: string }>,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    if (!req.user) {
+      throw new AppError('User not authenticated', 401);
+    }
+
+    const result = await exchangeOtpService.generatePhaseOtps(
+      req.params.id,
+      req.user.userId,
+      OtpPhase.START
+    );
+
+    res.json({
+      success: true,
+      message: result.message,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function verifyStartOtp(
+  req: Request<{ id: string }, object, { otp: string }>,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    if (!req.user) {
+      throw new AppError('User not authenticated', 401);
+    }
+
+    if (!req.body.otp || req.body.otp.trim().length !== 6) {
+      throw new AppError('A valid 6-digit OTP is required', 400);
+    }
+
+    const result = await exchangeOtpService.verifyPhaseOtp(
+      req.params.id,
+      req.user.userId,
+      OtpPhase.START,
+      req.body.otp
+    );
+
+    res.json({
+      success: true,
+      message: result.message,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function generateCompletionOtp(
+  req: Request<{ id: string }>,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    if (!req.user) {
+      throw new AppError('User not authenticated', 401);
+    }
+
+    const result = await exchangeOtpService.generatePhaseOtps(
+      req.params.id,
+      req.user.userId,
+      OtpPhase.COMPLETION
+    );
+
+    res.json({
+      success: true,
+      message: result.message,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function verifyCompletionOtp(
+  req: Request<{ id: string }, object, { otp: string }>,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    if (!req.user) {
+      throw new AppError('User not authenticated', 401);
+    }
+
+    if (!req.body.otp || req.body.otp.trim().length !== 6) {
+      throw new AppError('A valid 6-digit OTP is required', 400);
+    }
+
+    const result = await exchangeOtpService.verifyPhaseOtp(
+      req.params.id,
+      req.user.userId,
+      OtpPhase.COMPLETION,
+      req.body.otp
+    );
+
+    res.json({
+      success: true,
+      message: result.message,
+      data: result,
     });
   } catch (error) {
     next(error);
@@ -506,7 +471,7 @@ export async function confirmExchange(
 }
 
 /**
- * Activate an exchange (change from PENDING to ACTIVE)
+ * Accept an exchange request and prepare the start OTP handshake
  * PUT /exchanges/:id/activate
  */
 export async function activateExchange(
@@ -530,12 +495,9 @@ export async function activateExchange(
       throw new AppError('Exchange not found', 404);
     }
 
-    // Both provider and requester can activate
-    if (
-      existingExchange.providerId !== req.user.userId &&
-      existingExchange.requesterId !== req.user.userId
-    ) {
-      throw new AppError('Not authorized to activate this exchange', 403);
+    // Only the provider can accept a pending request
+    if (existingExchange.providerId !== req.user.userId) {
+      throw new AppError('Only the provider can accept this exchange', 403);
     }
 
     // Can only activate PENDING exchanges
@@ -548,7 +510,7 @@ export async function activateExchange(
 
     const exchange = await prisma.exchange.update({
       where: { id },
-      data: { status: 'ACTIVE' },
+      data: { status: ExchangeStatus.ACCEPTED },
       include: {
         provider: {
           select: {
@@ -569,11 +531,20 @@ export async function activateExchange(
     });
 
     await ensureConversationForExchange(exchange.id);
+    const otpResult = await exchangeOtpService.generatePhaseOtps(
+      exchange.id,
+      req.user.userId,
+      OtpPhase.START
+    );
 
     res.json({
       success: true,
-      message: 'Exchange activated successfully',
-      data: exchange,
+      message: 'Request accepted. Share the start OTP with the receiver to begin.',
+      data: {
+        ...exchange,
+        otpStatus: otpResult.otpStatus,
+        revealedOtp: otpResult.revealedOtp,
+      },
     });
   } catch (error) {
     next(error);

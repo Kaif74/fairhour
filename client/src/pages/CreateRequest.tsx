@@ -78,11 +78,11 @@ const CreateRequest: React.FC = () => {
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="w-8 h-8 text-green-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Request Posted!</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Help Request Posted!</h2>
             <p className="text-gray-500 mb-4">
-              Your request has been posted. Service providers can now offer to help you.
+              Your help request is live. People in the community can now offer to help.
             </p>
-            <p className="text-sm text-gray-400">Redirecting to dashboard...</p>
+            <p className="text-sm text-gray-400">Redirecting to home...</p>
           </motion.div>
         </div>
       </PageTransition>
@@ -104,9 +104,9 @@ const CreateRequest: React.FC = () => {
 
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Request a Service</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Ask for Help</h1>
             <p className="text-gray-500">
-              Describe what you need help with. Community members can offer to assist you.
+              Tell the community what you need and how many credits you&apos;re offering.
             </p>
           </div>
 
@@ -125,7 +125,7 @@ const CreateRequest: React.FC = () => {
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <FileText className="w-4 h-4 inline mr-2" />
-                Request Title
+                Help Request Title
               </label>
               <input
                 type="text"
@@ -201,7 +201,7 @@ const CreateRequest: React.FC = () => {
                 Time Credits Offered
               </label>
               <p className="text-xs text-gray-500 mb-3">
-                How many hours are you willing to give in exchange for this service?
+                How many credits are you offering in return for this help?
               </p>
               <div className="flex items-center gap-4">
                 <input

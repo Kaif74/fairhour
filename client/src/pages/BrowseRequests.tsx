@@ -174,9 +174,9 @@ const BrowseRequests: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Browse Requests</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Help Requests</h1>
             <p className="text-gray-500">
-              Help others by fulfilling their service requests and earn time credits.
+              See what people need help with and offer your skills in return for credits.
             </p>
           </div>
 
@@ -306,7 +306,7 @@ const BrowseRequests: React.FC = () => {
                       {/* Action Button */}
                       <Button fullWidth className="mt-4" onClick={() => handleOfferClick(request)}>
                         <HandHelping className="w-4 h-4 mr-2" />
-                        {isAuthenticated ? 'Offer to Help' : 'Sign in to Help'}
+                        {isAuthenticated ? 'Offer Help' : 'Sign in to Help'}
                       </Button>
                     </div>
                   </motion.div>
@@ -333,7 +333,7 @@ const BrowseRequests: React.FC = () => {
                 className="bg-white rounded-2xl max-w-md w-full p-6"
                 onClick={(e) => e.stopPropagation()}
               >
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Confirm Your Offer</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Confirm Your Help Offer</h3>
 
                 <div className="bg-gray-50 rounded-xl p-4 mb-6">
                   <h4 className="font-semibold text-gray-900 mb-2">{showOfferModal.title}</h4>
@@ -360,7 +360,7 @@ const BrowseRequests: React.FC = () => {
                     Cancel
                   </Button>
                   <Button fullWidth onClick={handleOfferToHelp} disabled={offerLoading}>
-                    {offerLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirm Offer'}
+                    {offerLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirm Help Offer'}
                   </Button>
                 </div>
               </motion.div>

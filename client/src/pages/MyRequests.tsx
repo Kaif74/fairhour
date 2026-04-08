@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
     MessageSquare,
-    CheckCircle,
     Clock,
-    MoreHorizontal,
-    User,
     Loader2,
     AlertCircle,
     Plus,
     ExternalLink,
+    ShieldCheck,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
@@ -22,8 +20,9 @@ interface Exchange {
     providerId: string;
     requesterId: string;
     hours: number;
-    status: 'PENDING' | 'ACTIVE' | 'COMPLETED';
+    status: 'PENDING' | 'ACCEPTED' | 'ACTIVE' | 'COMPLETED';
     createdAt: string;
+    startedAt?: string | null;
     completedAt: string | null;
     providerConfirmed?: boolean;
     requesterConfirmed?: boolean;
@@ -46,7 +45,7 @@ interface ExchangesData {
 const MyRequests: React.FC = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState<'All' | 'PENDING' | 'ACTIVE' | 'COMPLETED'>('All');
+    const [activeTab, setActiveTab] = useState<'All' | 'PENDING' | 'ACCEPTED' | 'ACTIVE' | 'COMPLETED'>('All');
 
     // Data state
     const [exchanges, setExchanges] = useState<Exchange[]>([]);
@@ -89,6 +88,8 @@ const MyRequests: React.FC = () => {
         switch (status) {
             case 'PENDING':
                 return 'bg-yellow-100 text-yellow-800';
+            case 'ACCEPTED':
+                return 'bg-violet-100 text-violet-800';
             case 'ACTIVE':
                 return 'bg-blue-100 text-blue-800';
             case 'COMPLETED':
@@ -104,34 +105,6 @@ const MyRequests: React.FC = () => {
             month: 'short',
             year: 'numeric',
         });
-    };
-
-    // Handle confirm receipt (for requester)
-    const handleConfirmReceipt = async (exchangeId: string) => {
-        try {
-            setActionLoading(exchangeId);
-            await api.put(`/api/exchanges/${exchangeId}/confirm`);
-
-            // Update local state
-            setExchanges((prev) =>
-                prev.map((e) => {
-                    if (e.id === exchangeId) {
-                        const updated = { ...e, requesterConfirmed: true };
-                        // Check if both confirmed
-                        if (updated.providerConfirmed && updated.requesterConfirmed) {
-                            updated.status = 'COMPLETED';
-                            updated.completedAt = new Date().toISOString();
-                        }
-                        return updated;
-                    }
-                    return e;
-                })
-            );
-        } catch (err) {
-            console.error('Failed to confirm receipt:', err);
-        } finally {
-            setActionLoading(null);
-        }
     };
 
     // Handle cancel request (for pending requests)
@@ -156,6 +129,10 @@ const MyRequests: React.FC = () => {
         return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=22c55e&color=fff&size=100`;
     };
 
+    const openVerificationFlow = (exchangeId: string) => {
+        navigate(`/activity?exchange=${exchangeId}`);
+    };
+
     if (loading) {
         return (
             <PageTransition>
@@ -170,13 +147,16 @@ const MyRequests: React.FC = () => {
         <PageTransition>
             <div className="min-h-screen bg-gray-50/50 pt-20 pb-12">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    {/* Header with Create Request Button */}
+                    {/* Header with Ask for Help button */}
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-                        <h1 className="text-2xl font-bold text-gray-900">My Requests</h1>
+                        <div>
+                            <h1 className="text-2xl font-bold text-gray-900">Help I Asked For</h1>
+                            <p className="text-gray-500 mt-1">Track the help you&apos;ve requested from the community.</p>
+                        </div>
                         <Link to="/requests/new">
                             <Button>
                                 <Plus className="w-4 h-4 mr-2" />
-                                Create Request
+                                Ask for Help
                             </Button>
                         </Link>
                     </div>
@@ -190,7 +170,7 @@ const MyRequests: React.FC = () => {
 
                     {/* Tabs */}
                     <div className="flex space-x-1 bg-white p-1 rounded-xl shadow-sm border border-gray-100 mb-8 w-full sm:w-auto inline-flex">
-                        {(['All', 'PENDING', 'ACTIVE', 'COMPLETED'] as const).map((tab) => (
+                        {(['All', 'PENDING', 'ACCEPTED', 'ACTIVE', 'COMPLETED'] as const).map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
@@ -263,12 +243,21 @@ const MyRequests: React.FC = () => {
                                         {/* Timeline / Progress Preview */}
                                         <div className="hidden lg:flex items-center space-x-2 text-xs text-gray-400">
                                             <div
-                                                className={`flex items-center ${['PENDING', 'ACTIVE', 'COMPLETED'].includes(req.status) ? 'text-brand-600 font-medium' : ''}`}
+                                                className={`flex items-center ${['PENDING', 'ACCEPTED', 'ACTIVE', 'COMPLETED'].includes(req.status) ? 'text-brand-600 font-medium' : ''}`}
                                             >
                                                 <div
-                                                    className={`w-2 h-2 rounded-full mr-2 ${['PENDING', 'ACTIVE', 'COMPLETED'].includes(req.status) ? 'bg-brand-500' : 'bg-gray-300'}`}
+                                                    className={`w-2 h-2 rounded-full mr-2 ${['PENDING', 'ACCEPTED', 'ACTIVE', 'COMPLETED'].includes(req.status) ? 'bg-brand-500' : 'bg-gray-300'}`}
                                                 />
                                                 Requested
+                                            </div>
+                                            <div className="w-8 h-px bg-gray-200" />
+                                            <div
+                                                className={`flex items-center ${['ACCEPTED', 'ACTIVE', 'COMPLETED'].includes(req.status) ? 'text-brand-600 font-medium' : ''}`}
+                                            >
+                                                <div
+                                                    className={`w-2 h-2 rounded-full mr-2 ${['ACCEPTED', 'ACTIVE', 'COMPLETED'].includes(req.status) ? 'bg-brand-500' : 'bg-gray-300'}`}
+                                                />
+                                                Accepted
                                             </div>
                                             <div className="w-8 h-px bg-gray-200" />
                                             <div
@@ -277,7 +266,7 @@ const MyRequests: React.FC = () => {
                                                 <div
                                                     className={`w-2 h-2 rounded-full mr-2 ${['ACTIVE', 'COMPLETED'].includes(req.status) ? 'bg-brand-500' : 'bg-gray-300'}`}
                                                 />
-                                                Accepted
+                                                In progress
                                             </div>
                                             <div className="w-8 h-px bg-gray-200" />
                                             <div
@@ -307,29 +296,28 @@ const MyRequests: React.FC = () => {
                                                     )}
                                                 </Button>
                                             )}
-                                            {req.status === 'ACTIVE' && !req.requesterConfirmed && (
+                                            {req.status === 'ACCEPTED' && (
                                                 <Button
                                                     size="sm"
                                                     variant="outline"
-                                                    className="text-green-600 border-green-200 hover:bg-green-50 hover:border-green-300"
-                                                    onClick={() => handleConfirmReceipt(req.id)}
-                                                    disabled={actionLoading === req.id}
+                                                    className="text-violet-700 border-violet-200 hover:bg-violet-50 hover:border-violet-300"
+                                                    onClick={() => openVerificationFlow(req.id)}
                                                 >
-                                                    {actionLoading === req.id ? (
-                                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                                    ) : (
-                                                        <CheckCircle className="w-4 h-4 mr-2" />
-                                                    )}
-                                                    Confirm Receipt
+                                                    <ShieldCheck className="w-4 h-4 mr-2" />
+                                                    Start Verification
                                                 </Button>
                                             )}
-                                            {req.status === 'ACTIVE' &&
-                                                req.requesterConfirmed &&
-                                                !req.providerConfirmed && (
-                                                    <span className="text-xs text-yellow-600 bg-yellow-50 px-3 py-1.5 rounded-full">
-                                                        Waiting for provider...
-                                                    </span>
-                                                )}
+                                            {req.status === 'ACTIVE' && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="text-blue-700 border-blue-200 hover:bg-blue-50 hover:border-blue-300"
+                                                    onClick={() => openVerificationFlow(req.id)}
+                                                >
+                                                    <ShieldCheck className="w-4 h-4 mr-2" />
+                                                    Finish with OTP
+                                                </Button>
+                                            )}
                                             <Button size="sm" variant="secondary">
                                                 <MessageSquare className="w-4 h-4 mr-2" /> Message
                                             </Button>
@@ -339,9 +327,9 @@ const MyRequests: React.FC = () => {
                             ) : (
                                 <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200">
                                     <Clock className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                                    <h3 className="text-lg font-medium text-gray-900">No requests found</h3>
-                                    <p className="text-gray-500 mb-4">You haven't requested any services yet.</p>
-                                    <Button onClick={() => navigate('/browse')}>Browse Services</Button>
+                                    <h3 className="text-lg font-medium text-gray-900">No help requests yet</h3>
+                                    <p className="text-gray-500 mb-4">You haven&apos;t asked the community for help yet.</p>
+                                    <Button onClick={() => navigate('/requests/new')}>Ask for Help</Button>
                                 </div>
                             )}
                         </AnimatePresence>

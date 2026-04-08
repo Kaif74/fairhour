@@ -15,8 +15,24 @@ export interface Service {
   title: string;
   description: string;
   category: string;
+  occupationId?: string | null;
   isActive: boolean;
   createdAt: string;
+  user?: {
+    id: string;
+    name: string;
+    location?: string | null;
+    reputationScore?: number;
+    profileImageUrl?: string | null;
+  };
+  occupation?: {
+    id: string;
+    title: string;
+    ncoCode: string;
+    majorGroup: string;
+    skillLevel: number;
+    baseMultiplier: number;
+  } | null;
 }
 
 export interface ServiceRequest {
@@ -33,8 +49,9 @@ export interface Exchange {
   providerId: string;
   requesterId: string;
   hours: number;
-  status: 'PENDING' | 'ACTIVE' | 'COMPLETED';
+  status: 'PENDING' | 'ACCEPTED' | 'ACTIVE' | 'COMPLETED';
   createdAt: string;
+  startedAt: string | null;
   completedAt: string | null;
   provider?: { id: string; name: string };
   requester?: { id: string; name: string };

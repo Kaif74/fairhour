@@ -10,6 +10,7 @@ import {
   CheckCircle,
   MessageSquare,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import PageTransition from '../components/PageTransition';
 import { getConversationMessages, getConversations, markConversationRead } from '../api/conversations';
@@ -17,7 +18,6 @@ import { ApiConversation, ApiMessage } from '../types';
 import { connectSocket, disconnectSocket } from '../services/socket';
 import { useAuth } from '../hooks/useAuth';
 import { formatRelativeDate, getAvatarUrl } from '../utils';
-import { api } from '../api';
 
 type LocalMessage = ApiMessage & {
   optimistic?: boolean;
@@ -43,6 +43,7 @@ const formatPreviewTime = (timestamp?: string | null): string => {
 
 const Messages: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [conversations, setConversations] = useState<ApiConversation[]>([]);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<LocalMessage[]>([]);
@@ -280,15 +281,9 @@ const Messages: React.FC = () => {
     );
   };
 
-  const handleMarkCompleted = async () => {
+  const openExchange = () => {
     if (!activeConversation?.exchangeId) return;
-    try {
-      await api.put(`/api/exchanges/${activeConversation.exchangeId}/confirm`);
-      await refreshConversations();
-    } catch (err) {
-      console.error('Failed to mark completed:', err);
-      setError('Failed to mark exchange as completed.');
-    }
+    navigate(`/activity?exchange=${activeConversation.exchangeId}`);
   };
 
   return (
@@ -415,9 +410,9 @@ const Messages: React.FC = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      {activeConversation.status === 'ACTIVE' && (
-                        <Button size="sm" variant="secondary" className="mr-2" onClick={handleMarkCompleted}>
-                          <CheckCircle className="w-4 h-4 mr-1.5" /> Mark Completed
+                      {activeConversation.exchangeId && (
+                        <Button size="sm" variant="secondary" className="mr-2" onClick={openExchange}>
+                          <CheckCircle className="w-4 h-4 mr-1.5" /> Open Exchange
                         </Button>
                       )}
                       <button className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100">

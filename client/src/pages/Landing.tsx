@@ -146,7 +146,7 @@ const Landing: React.FC = () => {
             >
               <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-brand-50 text-brand-700 text-sm font-semibold mb-8 border border-brand-100 shadow-sm">
                 <Sparkles className="w-4 h-4 mr-2" />
-                Community First Economy
+                Trusted Skill Exchange
               </div>
               <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 tracking-tight leading-tight mb-6">
                 Your Time Has Value,
@@ -156,14 +156,14 @@ const Landing: React.FC = () => {
                 </span>
               </h1>
               <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-600 mb-10 leading-relaxed">
-                A modern time-banking platform where one hour of help equals one hour earned.
-                Transparent, fair, and built for real communities.
+                Find trusted help, share your skills, and earn fair credits with transparent
+                pricing, verified credibility, and a clear history for every exchange.
               </p>
 
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <Link to="/browse">
                   <Button size="xl" className="shadow-brand-500/20 shadow-xl">
-                    Find Services
+                    Find Help
                   </Button>
                 </Link>
                 <Link to="/requests">
@@ -172,7 +172,7 @@ const Landing: React.FC = () => {
                     size="xl"
                     className="bg-white/50 backdrop-blur-sm border-gray-200 text-gray-700 hover:bg-white"
                   >
-                    Request Help
+                    Ask for Help
                   </Button>
                 </Link>
               </div>
@@ -184,8 +184,8 @@ const Landing: React.FC = () => {
         <section className="py-24 bg-gray-50/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Explore Skills</h2>
-              <p className="text-lg text-gray-500">Discover what your community has to offer.</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Find Help Near You</h2>
+              <p className="text-lg text-gray-500">Discover skills people in your community are ready to share.</p>
             </div>
 
             {/* Search & Filters Container */}
@@ -286,19 +286,19 @@ const Landing: React.FC = () => {
                 to="/browse"
                 className="inline-flex items-center text-brand-600 font-semibold hover:text-brand-700 transition-colors"
               >
-                View all categories <ArrowRight className="w-4 h-4 ml-1" />
+                See all skills <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
             </div>
           </div>
         </section>
 
         {/* Section 1: Core Process Flow */}
-        <section className="core-section min-h-screen bg-white relative flex flex-col justify-center py-24 lg:py-32 overflow-hidden">
+        <section id="how-it-works" className="core-section min-h-screen bg-white relative flex flex-col justify-center py-24 lg:py-32 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             {/* Header */}
             <div className="text-center max-w-3xl mx-auto mb-20 md:mb-24">
               <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">
-                Simple, Fair, Transparent
+                Simple, Fair, Easy to Use
               </h2>
               <p className="text-xl text-gray-500 leading-relaxed mb-4">
                 No hidden fees, no complicated currency. Just time.
@@ -314,14 +314,14 @@ const Landing: React.FC = () => {
 
               {[
                 {
-                  title: 'Offer Skills',
+                  title: 'Share a Skill',
                   primary: 'List what you love to do. Earn 1 credit per hour.',
                   secondary:
                     'Earned hours are securely recorded so your contribution is always recognized.',
                   icon: Zap,
                 },
                 {
-                  title: 'Request Help',
+                  title: 'Ask for Help',
                   primary: 'Use credits to get help with what you need.',
                   secondary: 'Every exchange is tracked from start to completion.',
                   icon: Search,
@@ -359,7 +359,7 @@ const Landing: React.FC = () => {
         </section>
 
         {/* Section 2: How Fairness Is Ensured (Blockchain) */}
-        <section className="min-h-screen bg-gray-50 relative flex flex-col justify-center py-24 lg:py-32 overflow-hidden">
+        <section id="trust" className="min-h-screen bg-gray-50 relative flex flex-col justify-center py-24 lg:py-32 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -515,7 +515,7 @@ const Landing: React.FC = () => {
                   </Link>
                   <Link to="/browse">
                     <Button variant="ghost" size="lg">
-                      Browse Services
+                      Find Help
                     </Button>
                   </Link>
                 </div>
@@ -577,12 +577,12 @@ const Landing: React.FC = () => {
                   </li>
                   <li>
                     <a href="#" className="hover:text-brand-600 transition-colors">
-                      Browse Services
+                      Find Help
                     </a>
                   </li>
                   <li>
                     <a href="#" className="hover:text-brand-600 transition-colors">
-                      Community Stories
+                      Help Requests
                     </a>
                   </li>
                   <li>

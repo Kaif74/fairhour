@@ -15,7 +15,7 @@ export const createExchangeSchema = z.object({
 });
 
 export const exchangeQuerySchema = z.object({
-    status: z.enum(['PENDING', 'ACTIVE', 'COMPLETED']).optional(),
+    status: z.enum(['PENDING', 'ACCEPTED', 'ACTIVE', 'COMPLETED']).optional(),
     limit: z.string().optional().transform((val) => val ? parseInt(val, 10) : 20),
     offset: z.string().optional().transform((val) => val ? parseInt(val, 10) : 0),
 });

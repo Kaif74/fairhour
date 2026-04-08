@@ -224,7 +224,7 @@ const AddServiceModal: React.FC<{
         >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900">Add New Service</h2>
+            <h2 className="text-xl font-bold text-gray-900">Add a Service</h2>
             <button
               onClick={handleClose}
               className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
@@ -474,7 +474,7 @@ const AddServiceModal: React.FC<{
                 ) : (
                   <>
                     <Plus className="w-4 h-4 mr-2" />
-                    Create Service
+                    Save Service
                   </>
                 )}
               </Button>
@@ -590,11 +590,11 @@ const MyServices: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">My Services</h1>
-              <p className="text-gray-500 mt-1">Skills you're offering to the community.</p>
+              <h1 className="text-2xl font-bold text-gray-900">Services I Offer</h1>
+              <p className="text-gray-500 mt-1">Skills and services people can book from you.</p>
             </div>
             <Button className="shadow-brand-500/20 shadow-lg" onClick={() => setIsModalOpen(true)}>
-              <Plus className="w-5 h-5 mr-2" /> Add New Service
+              <Plus className="w-5 h-5 mr-2" /> Add a Service
             </Button>
           </div>
 
@@ -696,19 +696,11 @@ const MyServices: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-50">
                     <div>
                       <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
-                        Hourly Value
+                        Base Rate
                       </p>
                       <p className="font-bold text-gray-900 flex items-center mt-1">
                         <Zap className="w-3.5 h-3.5 mr-1 text-brand-500" />
-                        {(() => {
-                          const multiplier = (service as any).occupation?.baseMultiplier ?? 1;
-                          const min = multiplier;
-                          // If there's an occupation, max can be up to 1.3x. If not, it's just 1.
-                          const max = (service as any).occupationId 
-                            ? parseFloat(Math.min(2.5, multiplier * 1.3).toFixed(1))
-                            : multiplier;
-                          return min === max ? min : `${min}–${max}`;
-                        })()} cr/hr
+                        From {(service as any).occupation?.baseMultiplier ?? 1} cr/hr
                       </p>
                     </div>
                     <div>
@@ -725,8 +717,12 @@ const MyServices: React.FC = () => {
 
                 <div className="bg-gray-50 px-6 py-3 border-t border-gray-100 flex justify-between items-center">
                   <div className="flex items-center text-sm font-bold text-gray-700">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                    {(service as any).user?.reputationScore > 0 ? (service as any).user.reputationScore.toFixed(1) : '4.5'}
+                    <Star className={`w-4 h-4 mr-1 ${(service as any).user?.reputationScore > 0 ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
+                    {(service as any).user?.reputationScore > 0 ? (
+                      (service as any).user.reputationScore.toFixed(1)
+                    ) : (
+                      <span className="font-medium text-gray-400">No reviews yet</span>
+                    )}
                   </div>
                   <div className="flex space-x-2">
                     <button

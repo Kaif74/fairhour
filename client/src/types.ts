@@ -10,7 +10,7 @@ export enum UserRole {
 
 export type ServiceStatus = 'Active' | 'Paused';
 export type RequestStatus = 'OPEN' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
-export type ExchangeStatus = 'PENDING' | 'ACTIVE' | 'COMPLETED';
+export type ExchangeStatus = 'PENDING' | 'ACCEPTED' | 'ACTIVE' | 'COMPLETED';
 export type ConversationStatus = 'ACTIVE' | 'LOCKED';
 
 // =============================================================================
@@ -119,9 +119,93 @@ export interface ApiValuationEstimate {
     occupationTitle: string | null;
     reputationFactor: number;
     demandFactor: number;
+    experienceMultiplier: number;
+    experienceScore: number;
+    rawMultiplier: number;
+    maxAllowedMultiplier: number;
+    capTier: 'standard' | 'advanced' | 'professional' | 'elite';
     averageRating: number | null;
     reviewCount: number;
   };
+}
+
+export interface ApiCredibilityBreakdown {
+  completionRate: number;
+  avgRating: number;
+  avgRatingNormalized: number;
+  repeatClientsRatio: number;
+  disputeRatio: number;
+  disputePenalty: number;
+  weightedBaseScore: number;
+  jobsFactor: number;
+  jobsFactorNormalized: number;
+  declaredLevelSupport: number;
+  proofBonus: number;
+  finalScore: number;
+  weightedReviewCount: number;
+  flaggedReviewCount: number;
+  lowTrustReviewCount: number;
+  verifiedProofs: number;
+}
+
+export interface ApiProofVoteSummary {
+  validVotes: number;
+  fakeVotes: number;
+  irrelevantVotes: number;
+  proofScore: number;
+  totalWeight: number;
+  isVerified: boolean;
+}
+
+export interface ApiCredibilityProof {
+  id: string;
+  proofType: 'certificate' | 'portfolio' | 'link' | 'image';
+  proofUrl: string;
+  description: string | null;
+  isVerified: boolean;
+  createdAt: string;
+  votes: ApiProofVoteSummary;
+}
+
+export interface ApiOccupationCredibilitySummary {
+  occupationId: string;
+  occupationTitle: string;
+  occupationCode: string;
+  declaredLevel: 'beginner' | 'intermediate' | 'expert';
+  experienceScore: number;
+  credibilityScore: number;
+  experienceMultiplier: number;
+  jobsCompleted: number;
+  avgRating: number;
+  repeatClients: number;
+  disputeCount: number;
+  verifiedProofs: number;
+  badge: string;
+}
+
+export interface ApiUserOccupationCredibility {
+  userId: string;
+  occupationId: string;
+  occupationTitle: string | null;
+  occupationCode: string | null;
+  declaredLevel: 'beginner' | 'intermediate' | 'expert';
+  experienceScore: number;
+  credibilityScore: number;
+  experienceMultiplier: number;
+  jobsCompleted: number;
+  avgRating: number;
+  repeatClients: number;
+  disputeCount: number;
+  verifiedProofs: number;
+  badge: string;
+  breakdown: ApiCredibilityBreakdown;
+  proofs: ApiCredibilityProof[];
+  recentEvents: Array<{
+    id: string;
+    eventType: string;
+    metadata: unknown;
+    createdAt: string;
+  }>;
 }
 
 /**
@@ -155,9 +239,40 @@ export interface ApiExchange {
   requesterConfirmed: boolean;
   blockchainTxHash: string | null;
   createdAt: string;
+  startedAt: string | null;
   completedAt: string | null;
   provider?: ApiServiceUser;
   requester?: ApiServiceUser;
+}
+
+export interface ApiOtpPhaseStatus {
+  phase: 'start' | 'completion';
+  status: 'not_started' | 'pending' | 'expired' | 'verified';
+  sessionId: string | null;
+  createdAt: string | null;
+  expiresAt: string | null;
+  generatedFor: 'provider' | 'requester';
+  verifiedBy: 'provider' | 'requester';
+  currentUserRoleInPhase: 'generator' | 'verifier';
+  verified: boolean;
+  verifiedAt: string | null;
+  failedAttempts: number;
+  verifyAttemptsRemaining: number;
+  generationCount: number;
+  generationAttemptsRemaining: number;
+  canGenerate: boolean;
+  canVerify: boolean;
+  isExpired: boolean;
+}
+
+export interface ApiExchangeOtpStatus {
+  exchangeId: string;
+  exchangeStatus: ExchangeStatus;
+  currentUserRole: 'provider' | 'requester';
+  startedAt: string | null;
+  completedAt: string | null;
+  start: ApiOtpPhaseStatus;
+  completion: ApiOtpPhaseStatus;
 }
 
 // =============================================================================
@@ -401,6 +516,5 @@ export function apiServiceToDisplay(service: ApiService): ServiceDisplay {
     occupation: occupation || null,
     occupationId: service.occupationId,
     creditRateMin: multiplier,
-    creditRateMax: parseFloat(Math.min(2.5, multiplier * 1.3).toFixed(1)),
   };
 }

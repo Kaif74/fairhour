@@ -7,7 +7,6 @@ import {
   Clock,
   MapPin,
   Calendar,
-  User,
   Briefcase,
   CheckCircle,
   X,
@@ -21,9 +20,15 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import api from '../api';
+import { getUserOccupationCredibility, voteOnProof } from '../api/credibility';
 import Button from '../components/Button';
+import CredibilityBreakdownPanel from '../components/CredibilityBreakdownPanel';
+import CredibilityCard from '../components/CredibilityCard';
+import CredibilityProofList from '../components/CredibilityProofList';
+import CredibilityPills from '../components/CredibilityPills';
 import PageTransition from '../components/PageTransition';
 import { CATEGORIES } from '../constants';
+import { ApiUserOccupationCredibility } from '../types';
 
 // Types
 interface ServiceProvider {
@@ -68,6 +73,11 @@ interface ValuationData {
     occupationTitle: string | null;
     reputationFactor: number;
     demandFactor: number;
+    experienceMultiplier: number;
+    experienceScore: number;
+    rawMultiplier: number;
+    maxAllowedMultiplier: number;
+    capTier: 'standard' | 'advanced' | 'professional' | 'elite';
     averageRating: number | null;
     reviewCount: number;
   };
@@ -107,32 +117,99 @@ const ServiceDetailsPage: React.FC = () => {
 
   // Valuation data
   const [valuation, setValuation] = useState<ValuationData | null>(null);
+  const [credibility, setCredibility] = useState<ApiUserOccupationCredibility | null>(null);
+  const [credibilityError, setCredibilityError] = useState<string | null>(null);
+  const [isVotingProof, setIsVotingProof] = useState(false);
 
   // Check if current user is the owner
   const isOwner = user && service && user.id === service.userId;
 
-  // Fetch service details
+  // Fetch service details and supporting credibility/valuation data together
   useEffect(() => {
-    const fetchService = async () => {
+    let isCancelled = false;
+
+    const fetchServicePage = async () => {
       if (!id) return;
 
       try {
         setLoading(true);
         setError(null);
+        setCredibilityError(null);
+        setService(null);
+        setValuation(null);
+        setCredibility(null);
+
         const response = await api.get<ApiResponse>(`/api/services/${id}`, { auth: false });
 
-        if (response.success && response.data) {
-          setService(response.data as unknown as ServiceDetails);
+        if (!response.success || !response.data) {
+          throw new Error('Service not found or failed to load');
         }
+
+        const serviceData = response.data as unknown as ServiceDetails;
+        let nextValuation: ValuationData | null = null;
+        let nextCredibility: ApiUserOccupationCredibility | null = null;
+        let nextCredibilityError: string | null = null;
+
+        await Promise.all([
+          (async () => {
+            try {
+              const params = new URLSearchParams({ hours: '1' });
+              if (serviceData.occupationId) params.set('occupationId', serviceData.occupationId);
+              if (serviceData.userId) params.set('providerId', serviceData.userId);
+
+              const valuationResponse = await api.get<{
+                ratePerHour: { min: number; max: number };
+                breakdown: ValuationData['breakdown'];
+              }>(`/api/valuation/estimate?${params.toString()}`, { auth: false });
+
+              if (valuationResponse.success && valuationResponse.data) {
+                nextValuation = valuationResponse.data as unknown as ValuationData;
+              }
+            } catch {
+              nextValuation = null;
+            }
+          })(),
+          (async () => {
+            if (!serviceData.occupationId || !serviceData.userId) {
+              return;
+            }
+
+            try {
+              nextCredibility = await getUserOccupationCredibility(
+                serviceData.userId,
+                serviceData.occupationId
+              );
+            } catch (credibilityFetchError) {
+              nextCredibilityError =
+                credibilityFetchError instanceof Error
+                  ? credibilityFetchError.message
+                  : 'Failed to load provider credibility';
+            }
+          })(),
+        ]);
+
+        if (isCancelled) return;
+
+        setService(serviceData);
+        setValuation(nextValuation);
+        setCredibility(nextCredibility);
+        setCredibilityError(nextCredibilityError);
       } catch (err) {
+        if (isCancelled) return;
         console.error('Failed to fetch service:', err);
         setError('Service not found or failed to load');
       } finally {
-        setLoading(false);
+        if (!isCancelled) {
+          setLoading(false);
+        }
       }
     };
 
-    fetchService();
+    fetchServicePage();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [id]);
 
   // Handle auto-opening edit modal
@@ -148,27 +225,33 @@ const ServiceDetailsPage: React.FC = () => {
     }
   }, [service, isOwner, location.search, navigate]);
 
-  // Fetch valuation estimate when service loads
-  useEffect(() => {
-    const fetchValuation = async () => {
-      if (!service) return;
-      try {
-        const params = new URLSearchParams({ hours: '1' });
-        if (service.occupationId) params.set('occupationId', service.occupationId);
-        if (service.userId) params.set('providerId', service.userId);
-        const response = await api.get<{ ratePerHour: { min: number; max: number }; breakdown: ValuationData['breakdown'] }>(
-          `/api/valuation/estimate?${params.toString()}`,
-          { auth: false }
-        );
-        if (response.success && response.data) {
-          setValuation(response.data as unknown as ValuationData);
-        }
-      } catch {
-        // Valuation is optional, don't block the page
-      }
-    };
-    fetchValuation();
-  }, [service]);
+  const refreshCredibility = async () => {
+    if (!service?.occupationId || !service.userId) return;
+    const credibilityData = await getUserOccupationCredibility(service.userId, service.occupationId);
+    setCredibility(credibilityData);
+    setCredibilityError(null);
+  };
+
+  const handleVoteOnProof = async (
+    proofId: string,
+    voteType: 'valid' | 'irrelevant' | 'fake'
+  ) => {
+    if (!user) {
+      navigate(`/login?redirect=/service/${id}`);
+      return;
+    }
+
+    try {
+      setIsVotingProof(true);
+      setCredibilityError(null);
+      await voteOnProof(proofId, voteType);
+      await refreshCredibility();
+    } catch (error) {
+      setCredibilityError(error instanceof Error ? error.message : 'Failed to submit vote');
+    } finally {
+      setIsVotingProof(false);
+    }
+  };
 
   // Handle avail service click
   const handleAvailClick = () => {
@@ -285,6 +368,21 @@ const ServiceDetailsPage: React.FC = () => {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(provider.name)}&background=22c55e&color=fff&size=200`;
   };
 
+  const getCapTierLabel = (
+    capTier: ValuationData['breakdown']['capTier']
+  ): string => {
+    switch (capTier) {
+      case 'elite':
+        return 'Elite cap';
+      case 'professional':
+        return 'Professional cap';
+      case 'advanced':
+        return 'Advanced cap';
+      default:
+        return 'Standard cap';
+    }
+  };
+
   if (loading) {
     return (
       <PageTransition>
@@ -311,7 +409,7 @@ const ServiceDetailsPage: React.FC = () => {
               </p>
               <Button onClick={() => navigate('/browse')}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Browse
+                Back to Find Help
               </Button>
             </div>
           </div>
@@ -337,7 +435,7 @@ const ServiceDetailsPage: React.FC = () => {
               className="flex items-center text-gray-600 hover:text-brand-600 transition-colors group"
             >
               <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-              Back to Browse
+              Back to Find Help
             </button>
           </motion.div>
 
@@ -387,6 +485,19 @@ const ServiceDetailsPage: React.FC = () => {
                   </p>
                 </div>
 
+                {credibility && (
+                  <div className="mt-6 border-t border-gray-100 pt-6">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <p className="text-sm font-medium text-gray-600">Provider credibility</p>
+                      <CredibilityPills
+                        declaredLevel={credibility.declaredLevel}
+                        badge={credibility.badge}
+                        credibilityScore={credibility.credibilityScore}
+                      />
+                    </div>
+                  </div>
+                )}
+
                 {/* Cost & Action Button */}
                 <div className="mt-8 pt-6 border-t border-gray-100">
                   <div className="flex items-center justify-between">
@@ -413,7 +524,7 @@ const ServiceDetailsPage: React.FC = () => {
                         disabled={!service.isActive}
                         className="px-8"
                       >
-                        Avail Service
+                        Ask for Help
                       </Button>
                     )}
                   </div>
@@ -426,6 +537,50 @@ const ServiceDetailsPage: React.FC = () => {
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">About the Provider</h3>
                   <p className="text-gray-600 leading-relaxed">{provider.bio}</p>
                 </div>
+              )}
+
+              {credibilityError && (
+                <div className="rounded-2xl border border-red-100 bg-red-50 px-5 py-4 text-sm text-red-700">
+                  {credibilityError}
+                </div>
+              )}
+
+              {credibility && (
+                <>
+                  <CredibilityBreakdownPanel breakdown={credibility.breakdown} />
+
+                  <div className="rounded-2xl bg-white p-8 shadow-soft">
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Proofs and community validation
+                        </h3>
+                        <p className="mt-1 text-sm text-gray-500">
+                          Review submitted proofs and help the community validate whether they support this provider&apos;s experience claim.
+                        </p>
+                      </div>
+                      {!user && (
+                        <Button
+                          variant="outline"
+                          onClick={() => navigate(`/login?redirect=/service/${id}`)}
+                        >
+                          Sign in to vote
+                        </Button>
+                      )}
+                    </div>
+
+                    <CredibilityProofList
+                      proofs={credibility.proofs}
+                      canVote={Boolean(user) && !isOwner}
+                      isOwner={Boolean(isOwner)}
+                      onVote={handleVoteOnProof}
+                    />
+
+                    {isVotingProof && (
+                      <p className="mt-4 text-sm text-slate-500">Submitting your vote...</p>
+                    )}
+                  </div>
+                </>
               )}
             </motion.div>
 
@@ -452,6 +607,15 @@ const ServiceDetailsPage: React.FC = () => {
                     <span className="inline-block mt-2 px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
                       Your Service
                     </span>
+                  )}
+                  {credibility && (
+                    <div className="mt-3 flex justify-center">
+                      <CredibilityPills
+                        declaredLevel={credibility.declaredLevel}
+                        badge={credibility.badge}
+                        compact
+                      />
+                    </div>
                   )}
                   {provider.location && (
                     <p className="text-gray-500 flex items-center justify-center mt-1">
@@ -521,6 +685,10 @@ const ServiceDetailsPage: React.FC = () => {
                 )}
               </div>
 
+              {credibility && (
+                <CredibilityCard credibility={credibility} compact />
+              )}
+
               {/* Skill Valuation Card */}
               {valuation && service.occupationId && (
                 <div className="bg-white rounded-2xl shadow-soft p-6">
@@ -559,6 +727,16 @@ const ServiceDetailsPage: React.FC = () => {
                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                       <span className="text-gray-600 text-sm">Skill Multiplier</span>
                       <span className="font-semibold">×{valuation.breakdown.skillMultiplier}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                      <span className="text-gray-600 text-sm">Experience Multiplier</span>
+                      <span className="font-semibold">×{valuation.breakdown.experienceMultiplier}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                      <span className="text-gray-600 text-sm">{getCapTierLabel(valuation.breakdown.capTier)}</span>
+                      <span className="font-semibold">up to ×{valuation.breakdown.maxAllowedMultiplier}</span>
                     </div>
 
                     {/* Reputation */}
@@ -603,6 +781,17 @@ const ServiceDetailsPage: React.FC = () => {
                         <p className="text-sm font-medium text-gray-700">{valuation.breakdown.occupationTitle}</p>
                       </div>
                     )}
+
+                    {valuation.breakdown.maxAllowedMultiplier > 2.5 && (
+                      <div className="rounded-xl border border-brand-100 bg-brand-50 px-3 py-3">
+                        <p className="text-sm font-semibold text-brand-700">
+                          Higher ceiling unlocked
+                        </p>
+                        <p className="mt-1 text-xs leading-relaxed text-brand-700/80">
+                          Advanced professionals with strong experience and reviews can earn above the standard range, up to ×{valuation.breakdown.maxAllowedMultiplier}.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -635,7 +824,7 @@ const ServiceDetailsPage: React.FC = () => {
                     className="w-full bg-white text-brand-600 hover:bg-brand-50"
                     disabled={!service.isActive}
                   >
-                    Avail Service
+                    Ask for Help
                   </Button>
                 </div>
               )}
@@ -666,7 +855,7 @@ const ServiceDetailsPage: React.FC = () => {
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <CheckCircle className="w-8 h-8 text-green-600" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Request Sent!</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Help Request Sent!</h3>
                   <p className="text-gray-600">
                     Your service request has been sent to {provider.name}. Redirecting to
                     Activity...
@@ -675,7 +864,7 @@ const ServiceDetailsPage: React.FC = () => {
               ) : (
                 <>
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-bold text-gray-900">Avail Service</h3>
+                    <h3 className="text-xl font-bold text-gray-900">Ask for Help</h3>
                     <button
                       onClick={() => setShowAvailModal(false)}
                       className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -745,7 +934,7 @@ const ServiceDetailsPage: React.FC = () => {
                           Sending...
                         </>
                       ) : (
-                        'Confirm Request'
+                        'Send Request'
                       )}
                     </Button>
                   </div>
