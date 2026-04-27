@@ -20,7 +20,9 @@ contract TimeBankLedger {
         address indexed receiver,
         uint256 credits,
         uint256 occupationCode,
-        uint256 timestamp
+        uint256 timestamp,
+        string creditsDisplay,
+        string occupationCodeDisplay
     );
 
     function recordTransaction(
@@ -28,7 +30,9 @@ contract TimeBankLedger {
         address receiver,
         uint256 hoursWorked,
         uint256 credits,
-        uint256 occupationCode
+        uint256 occupationCode,
+        string memory creditsDisplay,
+        string memory occupationCodeDisplay
     ) public {
 
         balances[provider] += int256(credits);
@@ -50,7 +54,9 @@ contract TimeBankLedger {
             receiver,
             credits,
             occupationCode,
-            block.timestamp
+            block.timestamp,
+            creditsDisplay,
+            occupationCodeDisplay
         );
     }
 

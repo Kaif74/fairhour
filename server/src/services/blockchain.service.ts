@@ -2,10 +2,10 @@ import { ethers } from 'ethers';
 
 // Contract ABI containing the event and the recordTransaction function structure
 const contractABI = [
-  "event TransactionRecorded(address indexed provider, address indexed receiver, uint256 credits, uint256 occupationCode, uint256 timestamp)",
-  "function recordTransaction(address provider, address receiver, uint256 hoursWorked, uint256 credits, uint256 occupationCode) public",
-  "function getTransactionCount() public view returns (uint256)",
-  "function balances(address) public view returns (int256)"
+  'event TransactionRecorded(address indexed provider, address indexed receiver, uint256 credits, uint256 occupationCode, uint256 timestamp, string creditsDisplay, string occupationCodeDisplay)',
+  'function recordTransaction(address provider, address receiver, uint256 hoursWorked, uint256 credits, uint256 occupationCode, string creditsDisplay, string occupationCodeDisplay) public',
+  'function getTransactionCount() public view returns (uint256)',
+  'function balances(address) public view returns (int256)',
 ];
 
 class BlockchainService {
@@ -29,7 +29,9 @@ class BlockchainService {
 
       // Ensure all necessary configs are present, otherwise log a warning and run in degraded mode
       if (!rpcUrl || !privateKey || !contractAddress) {
-        console.warn('⚠️ Blockchain implementation is missing config (SEPOLIA_RPC, PRIVATE_KEY, or CONTRACT_ADDRESS). Blockchain logging skipped.');
+        console.warn(
+          '⚠️ Blockchain implementation is missing config (SEPOLIA_RPC, PRIVATE_KEY, or CONTRACT_ADDRESS). Blockchain logging skipped.'
+        );
         this.isConfigured = false;
         return;
       }
@@ -63,37 +65,35 @@ class BlockchainService {
     }
 
     try {
-      console.log(`🔗 Submitting transaction to Sepolia... Provider: ${params.providerWallet}, Receiver: ${params.receiverWallet}`);
-      
-      // Convert numeric properties ensuring they align with what solidity expects (uint256 usually handled automatically by ethers or explicitly via ethers.parseUnits/BigInt).
-      // Since our values are small numbers we use Math.floor to avoid decimals because Solidity uint256 doesn't handle floats directly.
-      // E.g. 1.5 hours -> multiplied or stored simply. If the contract supports exact numbers, BigInt is safer.
-      // For this demo, assuming base unit scaling or scaling by 100 for decimals.
-      
-      // Convert to integer avoiding precision loss (Solidity expects uint256)
-      const scaledHours = Math.floor(params.hours * 100); 
-      const scaledCredits = Math.floor(params.credits * 100);
-      
-      // Usually occupation code string contains hyphen e.g "2512-01". We will hash it or strip it.
-      // Easiest is to parse numeric or hash it to a uint256. For simplicity, we convert non-numeric to numbers or just hash.
-      const occCodeNumeric = BigInt(ethers.id(params.occupationCode || 'unknown'));
+      console.log(
+        `🔗 Submitting transaction to Sepolia... Provider: ${params.providerWallet}, Receiver: ${params.receiverWallet}`
+      );
+
+      // Keep the on-chain accounting in scaled integer units, but also emit
+      // human-readable strings so explorers can show the actual exchange values.
+      const scaledHours = Math.round(params.hours * 100);
+      const scaledCredits = Math.round(params.credits * 100);
+      const creditsDisplay = params.credits.toFixed(2);
+      const occupationCodeDisplay = params.occupationCode || 'unknown';
+      const occCodeNumeric = BigInt(ethers.id(occupationCodeDisplay));
 
       const tx = await this.contract.recordTransaction(
         params.providerWallet,
         params.receiverWallet,
         scaledHours,
         scaledCredits,
-        occCodeNumeric
+        occCodeNumeric,
+        creditsDisplay,
+        occupationCodeDisplay
       );
 
       console.log(`⏳ Waiting for block confirmation... Tx Hash: ${tx.hash}`);
-      
+
       const receipt = await tx.wait(1); // wait for 1 confirmation
-      
+
       console.log(`✅ Transaction logged on-chain. Block: ${receipt.blockNumber}`);
-      
+
       return tx.hash;
-      
     } catch (error) {
       console.error('❌ Error recording transaction to blockchain:', error);
       // We return null instead of throwing so that the regular off-chain fairhour flow still completes
