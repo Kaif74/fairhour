@@ -383,7 +383,7 @@ const Dashboard: React.FC = () => {
                 icon={Clock}
                 title="Time Balance"
                 value={`${balance.balance.toFixed(1)}h`}
-                subtext={`Earned: ${balance.hoursEarned}h | Spent: ${balance.hoursSpent}h`}
+                subtext={`Earned: ${balance.hoursEarned.toFixed(1)}h | Spent: ${balance.hoursSpent.toFixed(1)}h`}
                 color="bg-brand-500"
                 isLoading={isLoading}
               />
@@ -517,7 +517,7 @@ const Dashboard: React.FC = () => {
                   </div>
                 )}
                 <Link to="/activity">
-                    <Button variant="ghost" fullWidth className="mt-4 text-sm">
+                  <Button variant="ghost" fullWidth className="mt-4 text-sm">
                     See all activity
                   </Button>
                 </Link>
