@@ -271,12 +271,17 @@ export async function getTimeBalance(
     );
     const balance = earnedCredits - spentCredits;
 
+    // Round to 1 decimal place to avoid floating point precision issues
+    const roundedEarned = Math.round(earnedCredits * 10) / 10;
+    const roundedSpent = Math.round(spentCredits * 10) / 10;
+    const roundedBalance = Math.round(balance * 10) / 10;
+
     res.json({
       success: true,
       data: {
-        balance,
-        hoursEarned: earnedCredits,
-        hoursSpent: spentCredits,
+        balance: roundedBalance,
+        hoursEarned: roundedEarned,
+        hoursSpent: roundedSpent,
       },
     });
   } catch (error) {
