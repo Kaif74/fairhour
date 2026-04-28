@@ -510,11 +510,11 @@ export function apiServiceToDisplay(service: ApiService): ServiceDisplay {
     description: service.description,
     category: service.category,
     skillLevel: skillLevelToDisplay(occupation?.skillLevel),
-    rating: user?.reputationScore && user.reputationScore > 0 ? user.reputationScore : 4.5,
+    rating: user?.reputationScore && user.reputationScore > 0 ? parseFloat(user.reputationScore.toFixed(1)) : 4.5,
     reviewCount: 0,
-    costPerHour: multiplier,
+    costPerHour: parseFloat(multiplier.toFixed(1)),
     occupation: occupation || null,
     occupationId: service.occupationId,
-    creditRateMin: multiplier,
+    creditRateMin: parseFloat(multiplier.toFixed(1)),
   };
 }

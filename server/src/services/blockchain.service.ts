@@ -69,10 +69,10 @@ class BlockchainService {
         `🔗 Submitting transaction to Sepolia... Provider: ${params.providerWallet}, Receiver: ${params.receiverWallet}`
       );
 
-      // Keep the on-chain accounting in scaled integer units, but also emit
-      // human-readable strings so explorers can show the actual exchange values.
-      const scaledHours = Math.round(params.hours * 100);
-      const scaledCredits = Math.round(params.credits * 100);
+      // Round to nearest integer for on-chain uint256 fields; the human-readable
+      // display strings carry the exact decimal values for block explorers.
+      const scaledHours = Math.round(params.hours);
+      const scaledCredits = Math.round(params.credits);
       const creditsDisplay = params.credits.toFixed(2);
       const occupationCodeDisplay = params.occupationCode || 'unknown';
       const occCodeNumeric = BigInt(ethers.id(occupationCodeDisplay));
